@@ -5,4 +5,9 @@
     <RootNamespace>E_ticaret.business</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\E-ticaret.data\E-ticaret.data.csproj" />
+    <ProjectReference Include="..\E-ticaret.Entity\E-ticaret.Entity.csproj" />
+  </ItemGroup>
+
 </Project>

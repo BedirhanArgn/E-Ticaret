@@ -13,16 +13,14 @@ namespace E_ticaret.data.Concrete.EfCore
     {
         public List<Product> GetPopularProduct()
         {
-            using (var context=new ShopContext())
+            using (var context = new ShopContext())
             {
 
                 return context.Products.ToList();
 
             }
 
-
         }
-
         public List<Product> GetTop5()
         {
            using(var context=new ShopContext())

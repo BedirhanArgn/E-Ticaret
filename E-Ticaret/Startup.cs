@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using E_ticaret.business.Abstract;
+using E_ticaret.business.Concreate;
 using E_ticaret.data.Abstract;
 using E_ticaret.data.Concrete.EfCore;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +28,10 @@ namespace E_Ticaret
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IProductRepository, EfCoreProductRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
+
+
+            services.AddScoped<IProductService, ProductManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
+
             services.AddControllersWithViews();
         }
 

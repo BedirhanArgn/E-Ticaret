@@ -5,7 +5,7 @@ using System.Text;
 
 namespace E_ticaret.data.Abstract
 {
-   public interface IOrderRepository:IRepository<Order>
+   public interface IOrderRepository:IRepository<Order> //eklemek istediğin özel fonksiyonlar buraya 
     {
         
     }
