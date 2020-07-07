@@ -1,3 +1,15 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model E_Ticaret.ViewModel.ProductViewModel
+
+<partial name="_header">
+
+    <div class="row">
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                        @await Html.PartialAsync("_product", product)
+                }
+            </div>
+    </div>
+
+
+     

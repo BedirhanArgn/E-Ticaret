@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using E_ticaret.business.Abstract;
 using E_ticaret.data.Abstract;
+using E_Ticaret.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,9 +18,14 @@ namespace E_Ticaret.Controllers
         {
             _productservice = productser;
         }
-        public IActionResult Index() 
+        public IActionResult Index()
         {
-            return View();
+            var ProductViewModel = new ProductViewModel()
+            {
+                Products = _productservice.getAll()
+        };
+
+            return View(ProductViewModel);
         }
 
       
