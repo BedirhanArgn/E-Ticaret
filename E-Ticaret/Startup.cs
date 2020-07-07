@@ -40,6 +40,7 @@ namespace E_Ticaret
         {
             if (env.IsDevelopment())
             {
+                SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
             else
