@@ -24,7 +24,9 @@ namespace E_ticaret.data.Concrete.EfCore
                 {
                     context.Products.AddRange(Products);
                 }
+                context.SaveChanges();
             }
+          
 
         }
         public static Category[] Categories =
