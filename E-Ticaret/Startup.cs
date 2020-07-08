@@ -27,11 +27,11 @@ namespace E_Ticaret
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Businness katmaný ui katmanda tanýtmak için doldur
             services.AddScoped<IProductRepository, EfCoreProductRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
-
-
+            services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<IProductService, ProductManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
-
+            services.AddScoped<ICategoryService, CategoryManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddControllersWithViews();
         }
 
