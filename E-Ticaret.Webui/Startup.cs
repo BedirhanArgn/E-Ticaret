@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace E_Ticaret
+namespace E_Ticaret.Webui
 {
     public class Startup
     {
@@ -27,6 +27,7 @@ namespace E_Ticaret
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
             //Businness katmaný ui katmanda tanýtmak için doldur
             services.AddScoped<IProductRepository, EfCoreProductRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
@@ -40,8 +41,9 @@ namespace E_Ticaret
         {
             if (env.IsDevelopment())
             {
-                SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
+                SeedDatabase.Seed();
+
             }
             else
             {
@@ -51,7 +53,7 @@ namespace E_Ticaret
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+        
             app.UseRouting();
 
             app.UseAuthorization();

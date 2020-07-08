@@ -1,0 +1,26 @@
+﻿@model E_Ticaret.Webui.ViewModel.ProductDetailModel
+
+<div class="row">
+    <div class="col-md-3">
+        <img src="~/img/@Model.product.ImageUrl" class="card-img">
+    </div>
+    <div class="col-md-9">
+        <h5 class="mb-3">@Model.product.Name</h5>
+        <hr />
+        @foreach (var item in Model.Categories)
+        {
+            <a href="#" class="btn btn-link p-0 mb-3">@item.Name</a>
+        }
+        <div class="mb-3">
+            <h4 class="text-primary mb-3"><i class="fas fa-lira-sign"></i> @Model.product.Price</h4>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Add to Card</button>
+
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p class="p-3">@Model.product.Description</p>
+    </div>
+</div>

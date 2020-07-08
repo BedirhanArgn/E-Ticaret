@@ -23,10 +23,11 @@ namespace E_ticaret.data.Concrete.EfCore
                 if (context.Products.Count() == 0) //Eğer db'deki category sayısı sıfırsa 
                 {
                     context.Products.AddRange(Products);
+                    context.AddRange(productCategories);
                 }
                 context.SaveChanges();
             }
-          
+
 
         }
         public static Category[] Categories =
@@ -48,6 +49,23 @@ namespace E_ticaret.data.Concrete.EfCore
 
         };
 
+        private static ProductCategory[] productCategories =
+        {
+            new ProductCategory(){Product=Products[0],Category=Categories[0] },
+            new ProductCategory(){Product=Products[0],Category=Categories[2] },
+            new ProductCategory(){Product=Products[1],Category=Categories[0]},
+            new ProductCategory(){Product=Products[1],Category=Categories[2] },
+
+            new ProductCategory(){Product=Products[2],Category=Categories[0] },
+            new ProductCategory(){Product=Products[2],Category=Categories[2] },
+            new ProductCategory(){Product=Products[3],Category=Categories[0]},
+            new ProductCategory(){Product=Products[3],Category=Categories[2] },
+
+            new ProductCategory(){Product=Products[4],Category=Categories[0] },
+            new ProductCategory(){Product=Products[4],Category=Categories[2]},
+              new ProductCategory(){Product=Products[5],Category=Categories[0]},
+            new ProductCategory(){Product=Products[5],Category=Categories[2] },
+        };
 
     }
 }

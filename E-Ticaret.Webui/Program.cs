@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace E_Ticaret
+namespace E_Ticaret.Webui
 {
     public class Program
     {

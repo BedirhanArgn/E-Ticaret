@@ -1,5 +1,6 @@
 ﻿using E_ticaret.data.Abstract;
 using E_ticaret.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,19 @@ namespace E_ticaret.data.Concrete.EfCore
             }
 
         }
+
+        public Product GetProductDetails(int id)
+        {
+            using (var context = new ShopContext())
+            {
+                return context.Products.Where(i => i.ProductId==id).Include(i=>i.ProductCategories).ThenInclude(i=>i.Category).FirstOrDefault(); 
+                //manyto many tablodan productid'ye karşılık gelen categoryid den categorye geçiş yaptık.
+                //ilgili productın categorysi varsa onları getirir.            
+            }
+
+
+        }
+
         public List<Product> GetTop5()
         {
            using(var context=new ShopContext())

@@ -25,7 +25,7 @@ namespace E_ticaret.business.Concreate
         {
 
             _productRepository.Delete(entity);
-        
+
         }
 
         public List<Product> getAll()
@@ -36,7 +36,12 @@ namespace E_ticaret.business.Concreate
 
         public Product getById(int id)
         {
-            throw new NotImplementedException();
+            return _productRepository.getById(id);
+        }
+
+        public Product getProductDetails(int id)
+        {
+            return _productRepository.GetProductDetails(id);
         }
 
         public void Update(Product entity)

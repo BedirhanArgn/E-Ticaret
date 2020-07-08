@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "E-ticaret.Entity": {
+      "commandName": "Project"
+    },
+    "E-Ticaret.Webui": {
+      "commandName": "Executable"
+    }
+  }
+}

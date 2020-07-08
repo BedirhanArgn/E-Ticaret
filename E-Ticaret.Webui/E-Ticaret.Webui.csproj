@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>E_Ticaret.Webui</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+	<ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+	<ItemGroup>
+    <ProjectReference Include="..\E-ticaret.business\E-ticaret.business.csproj" />
+    <ProjectReference Include="..\E-ticaret.data\E-ticaret.data.csproj" />
+    <ProjectReference Include="..\E-ticaret.Entity\E-ticaret.Entity.csproj" />
+  </ItemGroup>
+
+</Project>
