@@ -18,11 +18,11 @@ namespace E_Ticaret.Controllers
             _productservice = productService;
         }
 
-        public IActionResult List()
+        public IActionResult List(string category)
         {
             var ProductViewModel = new ProductViewModel()
             {
-                Products = _productservice.getAll()
+                Products = _productservice.GetProductsByCategory(category)
             };
 
             return View(ProductViewModel);

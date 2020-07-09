@@ -9,6 +9,7 @@ namespace E_ticaret.business.Abstract
     {
        Product getById(int id);
         Product getProductDetails(int id);
+        List<Product> GetProductsByCategory(string name);
         List<Product> getAll();
         void Create(Product entity);
         void Update(Product entity);

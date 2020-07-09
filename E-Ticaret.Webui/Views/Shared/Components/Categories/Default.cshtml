@@ -1,8 +1,6 @@
 @model List<Category>
  <div class="list-group">
     <a asp-controller="Product" asp-action="List" class="list-group-item list-group-item-action">Tüm Kategoriler</a>
-    <a asp-controller="Product" asp-action="List" class="list-group-item list-group-item-action">Telefon</a>
-    <a asp-controller="Product" asp-action="List" class="list-group-item list-group-item-action">Bilgisayar</a>
 
      @foreach (var category in Model)
     {
