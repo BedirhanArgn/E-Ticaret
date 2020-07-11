@@ -60,6 +60,15 @@ namespace E_Ticaret.Webui
 
             app.UseEndpoints(endpoints =>
             {
+
+
+
+                endpoints.MapControllerRoute(
+                    name:"about",
+                    pattern:"about",
+                    defaults: new {controller="Shop",action="about"}
+                    );
+
                 endpoints.MapControllerRoute(
                        name: "productdetails",
                        pattern: "{productname}",

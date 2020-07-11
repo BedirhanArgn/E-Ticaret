@@ -9,7 +9,7 @@ namespace E_ticaret.data.Abstract
     {
         Product GetProductDetails(string productname);
         List<Product> GetPopularProduct();
-        List<Product> GetProductsByCategory(string name);
+        List<Product> GetProductsByCategory(string name,int page,int pageSize);
         List<Product> GetTop5();
 
     }

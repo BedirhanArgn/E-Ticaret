@@ -35,7 +35,7 @@ namespace E_ticaret.data.Concrete.EfCore
 
         }
 
-        public List<Product> GetProductsByCategory(string name)
+        public List<Product> GetProductsByCategory(string name,int page,int pageSize)
         {
             using (var context = new ShopContext())
             {
@@ -50,7 +50,8 @@ namespace E_ticaret.data.Concrete.EfCore
                 }
 
 
-                return products.ToList();
+                return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+                //skip atlar ilk beş ürünü atladı ondan sonra atlanılan yerdeki beş ürünü aldı
             }
             
         }

@@ -44,9 +44,9 @@ namespace E_ticaret.business.Concreate
             return _productRepository.GetProductDetails(url);
         }
 
-        public List<Product> GetProductsByCategory(string name)
+        public List<Product> GetProductsByCategory(string name,int page,int pageSize)
         {
-            return _productRepository.GetProductsByCategory(name);
+            return _productRepository.GetProductsByCategory(name,page,pageSize);
 
         }
         public void Update(Product entity)

@@ -18,11 +18,12 @@ namespace E_Ticaret.Controllers
             _productservice = productService;
         }
 
-        public IActionResult List(string category)
+        public IActionResult List(string category,int page=1) //sayfa sayısı gelmezse 1 i göster
         {
+            const int pageSize = 3;
             var ProductViewModel = new ProductViewModel()
             {
-                Products = _productservice.GetProductsByCategory(category)
+                Products = _productservice.GetProductsByCategory(category,page,pageSize)
             };
 
             return View(ProductViewModel);
