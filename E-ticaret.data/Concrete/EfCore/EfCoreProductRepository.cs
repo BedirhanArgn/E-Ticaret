@@ -23,11 +23,11 @@ namespace E_ticaret.data.Concrete.EfCore
 
         }
 
-        public Product GetProductDetails(int id)
+        public Product GetProductDetails(string url)
         {
             using (var context = new ShopContext())
             {
-                return context.Products.Where(i => i.ProductId==id).Include(i=>i.ProductCategories).ThenInclude(i=>i.Category).FirstOrDefault(); 
+                return context.Products.Where(i => i.Url== url).Include(i=>i.ProductCategories).ThenInclude(i=>i.Category).FirstOrDefault(); 
                 //manyto many tablodan productid'ye karşılık gelen categoryid den categorye geçiş yaptık.
                 //ilgili productın categorysi varsa onları getirir.            
             }

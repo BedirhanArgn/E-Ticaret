@@ -42,12 +42,12 @@ namespace E_ticaret.data.Concrete.EfCore
 
         public static Product[] Products =
         {
-            new Product() {Name="Sony Xperia Xa",Description="Sonynin güzel telefonu",Price=2000,ImageUrl="1.jpg",IsApproved=true},
-            new Product() {Name="Sony Xperia Z1",Description="Sonynin güzel telefonu",Price=1000,ImageUrl="2.jpg",IsApproved=true},
-            new Product() {Name="Sony Xperia Z2",Description="Sonynin güzel telefonu",Price=3000,ImageUrl="3.jpg",IsApproved=false},
-            new Product() {Name="Sony Xperia Z3",Description="Sonynin güzel telefonu",Price=4000,ImageUrl="4.jpg",IsApproved=false},
-            new Product() {Name="Sony Xperia Xa Ultra",Description="Sonynin güzel telefonu",Price=5000,ImageUrl="5.jpg",IsApproved=false},
-            new Product() {Name="Sony Xperia Z4",Description="Sonynin güzel telefonu",Price=7000,ImageUrl="6.jpg",IsApproved=true}
+            new Product() {Name="Sony Xperia Xa",Url="sony-xa",Description="Sonynin güzel telefonu",Price=2000,ImageUrl="1.jpg",IsApproved=true},
+            new Product() {Name="Sony Xperia Z1",Url="sony-z1",Description="Sonynin güzel telefonu",Price=1000,ImageUrl="2.jpg",IsApproved=true},
+            new Product() {Name="Sony Xperia Z2",Url="sony-z2",Description="Sonynin güzel telefonu",Price=3000,ImageUrl="3.jpg",IsApproved=false},
+            new Product() {Name="Sony Xperia Z3",Url="sony-z3",Description="Sonynin güzel telefonu",Price=4000,ImageUrl="4.jpg",IsApproved=false},
+            new Product() {Name="Sony Xperia Xa Ultra",Url="sony-xa-ultra",Description="Sonynin güzel telefonu",Price=5000,ImageUrl="5.jpg",IsApproved=false},
+            new Product() {Name="Sony Xperia Z4",Url="sony-z4",Description="Sonynin güzel telefonu",Price=7000,ImageUrl="6.jpg",IsApproved=true}
 
         };
 

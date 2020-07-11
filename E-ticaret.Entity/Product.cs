@@ -10,8 +10,8 @@ namespace E_ticaret.Entity
         public string Name { get; set; }
 
         public double? Price { get; set; }
-        public string Description { get; set; }
-
+        public string Description { get; set; } 
+        public string Url { get; set; }
         public String ImageUrl { get; set; }
         public bool IsApproved { get; set; }
 

@@ -39,9 +39,9 @@ namespace E_ticaret.business.Concreate
             return _productRepository.getById(id);
         }
 
-        public Product getProductDetails(int id)
+        public Product getProductDetails(string url)
         {
-            return _productRepository.GetProductDetails(id);
+            return _productRepository.GetProductDetails(url);
         }
 
         public List<Product> GetProductsByCategory(string name)

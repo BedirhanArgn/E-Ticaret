@@ -28,13 +28,13 @@ namespace E_Ticaret.Controllers
             return View(ProductViewModel);
 
         }
-        public IActionResult Details(int? id)
+        public IActionResult Details(string productname)
         {
-            if(id==null)
+            if(productname == null)
             {
                 return NotFound();
             }
-            Product product = _productservice.getProductDetails((int)id);
+            Product product = _productservice.getProductDetails(productname);
             if(product==null)
             {
                 return NotFound();

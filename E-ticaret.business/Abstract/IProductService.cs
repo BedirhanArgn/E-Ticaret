@@ -8,7 +8,7 @@ namespace E_ticaret.business.Abstract
    public interface IProductService
     {
        Product getById(int id);
-        Product getProductDetails(int id);
+        Product getProductDetails(string url);
         List<Product> GetProductsByCategory(string name);
         List<Product> getAll();
         void Create(Product entity);
