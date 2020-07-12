@@ -45,6 +45,12 @@ namespace E_ticaret.business.Concreate
 
         }
 
+        public List<Product> GetHomePageProducts()
+        {
+            return _productRepository.GetHomePageProducts();
+
+        }
+
         public Product getProductDetails(string url)
         {
             return _productRepository.GetProductDetails(url);

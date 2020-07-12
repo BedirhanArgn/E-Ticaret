@@ -22,7 +22,7 @@ namespace E_Ticaret.Controllers
         {
             var ProductViewModel = new ProductViewModel()
             {
-                Products = _productservice.getAll()
+                Products = _productservice.GetHomePageProducts()
         };
 
             return View(ProductViewModel);
