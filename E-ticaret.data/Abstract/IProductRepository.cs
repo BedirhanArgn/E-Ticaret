@@ -11,6 +11,8 @@ namespace E_ticaret.data.Abstract
         List<Product> GetPopularProduct();
         List<Product> GetProductsByCategory(string name,int page,int pageSize);
         List<Product> GetTop5();
+        int getCountByCategory(string category);
+
 
     }
 }

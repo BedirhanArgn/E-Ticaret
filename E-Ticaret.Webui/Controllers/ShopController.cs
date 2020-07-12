@@ -23,6 +23,14 @@ namespace E_Ticaret.Controllers
             const int pageSize = 3;
             var ProductViewModel = new ProductViewModel()
             {
+
+                PageInfo = new PageInfo()
+                {
+                    TotalItems = _productservice.getCountByCategory(category),
+                    CurrentPage=page,
+                    ItemsPerPage=pageSize,
+                    CurrentCategory=category
+                },
                 Products = _productservice.GetProductsByCategory(category,page,pageSize)
             };
 

@@ -12,6 +12,27 @@ namespace E_ticaret.data.Concrete.EfCore
 
     public class EfCoreProductRepository : EfCoreGenericRepository<Product, ShopContext>, IProductRepository
     {
+        public int getCountByCategory(string category)
+        {
+            using (var context = new ShopContext())
+            {
+                var products = context.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(category))
+                {
+                    products = products
+                                   .Include(i => i.ProductCategories)
+                                   .ThenInclude(i => i.Category)
+                                   .Where(i => i.ProductCategories.Any(a => a.Category.Url == category));
+                }
+                return products.Count();
+                //skip atlar ilk beş ürünü atladı ondan sonra atlanılan yerdeki beş ürünü aldı
+            }
+
+
+
+        }
+
         public List<Product> GetPopularProduct()
         {
             using (var context = new ShopContext())
