@@ -56,6 +56,19 @@ namespace E_Ticaret.Controllers
             }) ;
             
         }
+        public IActionResult Search(string q)
+        {
+
+            var product = new ProductViewModel()
+            {
+                Products = _productservice.getSearchResult(q)
+
+        };
+
+            
+            return View(product);
+
+        }
 
 
 

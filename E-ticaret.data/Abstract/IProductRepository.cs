@@ -8,7 +8,7 @@ namespace E_ticaret.data.Abstract
     public interface IProductRepository : IRepository<Product>
     {
         Product GetProductDetails(string productname);
-        List<Product> GetPopularProduct();
+        List<Product> GetSearchResult(string searchString);
         List<Product> GetProductsByCategory(string name,int page,int pageSize);
         List<Product> GetHomePageProducts();
         int getCountByCategory(string category);

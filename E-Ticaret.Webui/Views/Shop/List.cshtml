@@ -19,6 +19,29 @@
             <div class="col">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
+                        @if (String.IsNullOrEmpty(Model.PageInfo.CurrentCategory))
+                        {
+                            int now = Model.PageInfo.CurrentPage;
+                            int totalpage = Model.PageInfo.TotalPages();
+                            if (now <= 1)
+                            {
+                                now = totalpage;
+                            }
+                            <li class="page-item"><a class="page-link" href="/products?page=@(now-1)">Previous</a></li>
+                        }
+                        else
+                        {
+                            int now = Model.PageInfo.CurrentPage;
+                            int totalpage = Model.PageInfo.TotalPages();
+                            if (now <= 1)
+                            {
+                                now = totalpage;
+                            }
+                            <li class="page-item"><a class="page-link" href="/products/@Model.PageInfo.CurrentCategory?page=@(now-1)">Previous</a></li>
+                        }
+
+
+
                         @for (int i = 0; i < Model.PageInfo.TotalPages(); i++)
                         {
                             if (String.IsNullOrEmpty(Model.PageInfo.CurrentCategory)) //eğer tüm ürünlerde geçiş yapacak isek(yani category bilgisi url de yok)
@@ -35,7 +58,36 @@
                             }
 
                         }
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        @if (String.IsNullOrEmpty(Model.PageInfo.CurrentCategory))
+                        {
+                            int now = Model.PageInfo.CurrentPage;
+                            int totalpage = Model.PageInfo.TotalPages();
+                            if (now >=totalpage)
+                            {
+                                now = totalpage;
+                                <li class="page-item"><a class="page-link" href="/products?page=@(now)">Next</a></li>
+
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" href="/products?page=@(now + 1)">Next</a></li>
+                            }
+                        }
+                        else
+                        {
+                            int now = Model.PageInfo.CurrentPage;
+                            int totalpage = Model.PageInfo.TotalPages();
+                            if (now >=totalpage)
+                            {
+                                now = totalpage;
+                                <li class="page-item"><a class="page-link" href="/products?page=@(now)">Next</a></li>
+
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" href="/products?page=@(now + 1)">Next</a></li>
+                            }
+                        }
                     </ul>
                 </nav>
             </div>

@@ -12,6 +12,7 @@ namespace E_ticaret.business.Abstract
         List<Product> GetProductsByCategory(string name,int page,int pageSize);
         List<Product> GetHomePageProducts();
         List<Product> getAll();
+        List<Product> getSearchResult(string searchString);
         void Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);

@@ -16,7 +16,7 @@ namespace E_ticaret.data.Concrete.EfCore
         {
             using (var context = new ShopContext())
             {
-                var products = context.Products.Where(i=>i.IsApproved).AsQueryable();
+                var products = context.Products.Where(i => i.IsApproved).AsQueryable();
 
                 if (!string.IsNullOrEmpty(category))
                 {
@@ -31,10 +31,10 @@ namespace E_ticaret.data.Concrete.EfCore
         }
         public List<Product> GetHomePageProducts()
         {
-            using(var context=new ShopContext())
+            using (var context = new ShopContext())
             {
 
-                return context.Products.Where(i => i.IsApproved&&i.IsHome).ToList();
+                return context.Products.Where(i => i.IsApproved && i.IsHome).ToList();
 
             }
         }
@@ -53,7 +53,7 @@ namespace E_ticaret.data.Concrete.EfCore
         {
             using (var context = new ShopContext())
             {
-                return context.Products.Where(i => i.Url== url).Include(i=>i.ProductCategories).ThenInclude(i=>i.Category).FirstOrDefault(); 
+                return context.Products.Where(i => i.Url == url).Include(i => i.ProductCategories).ThenInclude(i => i.Category).FirstOrDefault();
                 //manyto many tablodan productid'ye karşılık gelen categoryid den categorye geçiş yaptık.
                 //ilgili productın categorysi varsa onları getirir.            
             }
@@ -61,34 +61,43 @@ namespace E_ticaret.data.Concrete.EfCore
 
         }
 
-        public List<Product> GetProductsByCategory(string name,int page,int pageSize)
+        public List<Product> GetProductsByCategory(string name, int page, int pageSize)
         {
             using (var context = new ShopContext())
             {
-                var products = context.Products.Where(i=>i.IsApproved).AsQueryable();
+                var products = context.Products.Where(i => i.IsApproved).AsQueryable();
 
-                if(!string.IsNullOrEmpty(name))
+                if (!string.IsNullOrEmpty(name))
                 {
                     products = products
-                                   .Include(i => i.ProductCategories) 
+                                   .Include(i => i.ProductCategories)
                                    .ThenInclude(i => i.Category)
-                                   .Where(i => i.ProductCategories.Any(a => a.Category.Url==name));
+                                   .Where(i => i.ProductCategories.Any(a => a.Category.Url == name));
                 }
 
 
-                return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+                return products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
                 //skip atlar ilk beş ürünü atladı ondan sonra atlanılan yerdeki beş ürünü aldı
             }
-            
+
         }
 
-        public List<Product> GetTop5()
+        public List<Product> GetSearchResult(string searchString)
         {
-           using(var context=new ShopContext())
+            using (var context = new ShopContext())
             {
-                return context.Products.OrderByDescending(i=>i.ProductId).Take(5).ToList();
+                var products = context.Products.Where(i => i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || (i.Description.ToLower().Contains(searchString.ToLower()))));
 
+                return products.ToList();
             }
         }
-    }
-}
+            public List<Product> GetTop5()
+            {
+                using (var context = new ShopContext())
+                {
+                    return context.Products.OrderByDescending(i => i.ProductId).Take(5).ToList();
+
+                }
+            }
+        }
+    } 
