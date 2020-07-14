@@ -64,8 +64,6 @@ namespace E_Ticaret.Controllers
                 Products = _productservice.getSearchResult(q)
 
         };
-
-            
             return View(product);
 
         }
