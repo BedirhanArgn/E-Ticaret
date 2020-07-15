@@ -59,12 +59,18 @@ namespace E_Ticaret.Webui
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-           { 
-                
-                endpoints.MapControllerRoute(
+           {
+               endpoints.MapControllerRoute(
                     name: "adminproductlist",
                     pattern: "admin/products",
                     defaults: new { controller = "Admin", action = "ProductList" }
+
+                    );
+
+               endpoints.MapControllerRoute(
+                    name: "adminproductlist",
+                    pattern: "admin/products/{id?}",
+                    defaults: new { controller = "Admin", action = "Edit" }
 
                     );
                 
