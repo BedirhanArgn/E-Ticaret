@@ -10,7 +10,7 @@ namespace E_ticaret.data.Concrete.EfCore
 {
     public class EfCoreGenericRepository<TEntity, TContext> : IRepository<TEntity>
     where TEntity : class
-        where TContext : DbContext, new()
+    where TContext : DbContext,new()
     {
         public void Create(TEntity entity)
         {

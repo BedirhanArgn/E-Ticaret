@@ -8,7 +8,10 @@ using E_Ticaret.ViewModel;
 using E_Ticaret.Webui.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Newtonsoft.Json;
 
 namespace E_Ticaret.Webui.Controllers
 {
@@ -50,6 +53,17 @@ namespace E_Ticaret.Webui.Controllers
             };
 
             _productService.Create(entity);
+            //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
+
+
+            var msg = new AlertMessage()
+            {
+                AlertType = "success",
+                Message = $"{ entity.Name } isimli ürün eklendi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+
             return RedirectToAction("ProductList");
         }
         [HttpGet]
@@ -90,8 +104,35 @@ namespace E_Ticaret.Webui.Controllers
             entity.Url = model.Url;
             entity.Description = model.Description;
             _productService.Update(entity);
+
+            var msg = new AlertMessage()
+            {
+                AlertType = "success",
+                Message = $"{ entity.Name } isimli ürün güncellendi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
             return RedirectToAction("ProductList");
         }
+
+        public IActionResult DeleteProduct(int productId)
+        {
+            var entity = _productService.getById(productId);
+
+            if(entity!=null)
+            {
+                _productService.Delete(entity);
+            }
+            var msg = new AlertMessage()
+            {
+                AlertType = "danger",
+                Message = $"{ entity.Name } isimli ürün silindi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+            return RedirectToAction("ProductList");
+        }
+
 
     }
 }

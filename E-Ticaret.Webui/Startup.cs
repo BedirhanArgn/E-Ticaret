@@ -66,6 +66,12 @@ namespace E_Ticaret.Webui
                     defaults: new { controller = "Admin", action = "ProductList" }
 
                     );
+               endpoints.MapControllerRoute(
+                  name: "admindeleteproduct",
+                  pattern: "admin/deleteproduct",
+                  defaults: new { controller = "Admin", action = "DeleteProduct" }
+
+                  );
 
                endpoints.MapControllerRoute(
                     name: "adminproductlist",

@@ -14,6 +14,18 @@
 
     <main class="my-3">
         <div class="container">
+            @if (TempData["message"] != null)
+            {
+                var message = Newtonsoft.Json.JsonConvert.DeserializeObject<E_Ticaret.Webui.Models.AlertMessage>(TempData["message"] as String);
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-@message.AlertType">
+                            @message.Message;
+                        </div>
+                    </div>
+                </div>
+            }
+
             @RenderBody()
         </div>
     </main>

@@ -1,46 +1,48 @@
 ﻿@model E_Ticaret.ViewModel.ProductViewModel
 
 
+
 <div class="row">
     <div class="col-md-12">
         <h1>Admin Products</h1>
         <hr />
-        @if(Model.Products.Count()>0) {
-        
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <td>ID </td>
-                    <td>NAME</td>
-                    <td>IMAGE</td>
-                    <td>PRICE</td>
-                    <td></td>
-            </thead>
+        @if (Model.Products.Count() > 0)
+        {
 
-            <tbody>
-
-                @foreach (var item in Model.Products)
-                {
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td>@item.ProductId </td>
-                        <td>@item.Name</td>
-                        <td><img src="~/img/@item.ImageUrl" width="80"/></td>
-                        <td>@item.Price</td>
-                        <td>
-                            <a href="/admin/products/@item.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                            <form method="post" style="display:inline;" action="/admin/products/@item.ProductId">
-                                <input type="hidden" name="@item.ProductId" value="@item.ProductId" />
-                                <button class="btn btn-danger btn-sm mr-2">Delete</button>
-                            </form>
+                        <td>ID </td>
+                        <td>NAME</td>
+                        <td>IMAGE</td>
+                        <td>PRICE</td>
+                        <td></td>
+                </thead>
 
-                        </td>
-                    </tr>
+                <tbody>
+
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>@item.ProductId </td>
+                            <td>@item.Name</td>
+                            <td><img src="~/img/@item.ImageUrl" width="80" /></td>
+                            <td>@item.Price</td>
+                            <td>
+                                <a href="/admin/products/@item.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                <form method="post" style="display:inline;" action="/admin/deleteproduct">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button class="btn btn-danger btn-sm mr-2">Delete</button>
+                                </form>
+
+                            </td>
+                        </tr>
 
 
-                }
-            </tbody>
+                    }
+                </tbody>
 
-        </table>
+            </table>
         }
         else
         {
@@ -48,7 +50,7 @@
                 <h3>No Products</h3>
 
             </div>
-            
+
         }
 
     </div>
