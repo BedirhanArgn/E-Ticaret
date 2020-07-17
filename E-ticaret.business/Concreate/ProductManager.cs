@@ -39,6 +39,11 @@ namespace E_ticaret.business.Concreate
             return _productRepository.getById(id);
         }
 
+        public Product GetByIdWithCategories(int id)
+        {
+            return _productRepository.GetByIdWithCategories(id);
+        }
+
         public int getCountByCategory(string category)
         {
             return _productRepository.getCountByCategory(category);

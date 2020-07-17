@@ -72,20 +72,23 @@ namespace E_Ticaret.Webui.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var product = _productService.getById((int)id);
+            var product = _productService.GetByIdWithCategories((int)id);
             if(product==null)
             {
                 return NotFound();
             }
             var model = new ProductView()
             {
-                ProductId=product.ProductId,
-                Description=product.Description,
-                ImageUrl=product.ImageUrl,
-                Url=product.Url,
-                Name=product.Name,
-                Price=product.Price
-            };
+                ProductId = product.ProductId,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Url = product.Url,
+                Name = product.Name,
+                Price = product.Price,
+                SelectedCategories = product.ProductCategories.Select(i => i.Category).ToList() //seçili kategoriler edit için
+            }; 
+            ViewBag.Categories = _categoryService.getAll(); //hepsi 
+
 
             return View(model);  
 

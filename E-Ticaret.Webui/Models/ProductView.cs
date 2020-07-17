@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_ticaret.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace E_Ticaret.Webui.Models
         public bool IsHome { get; set; } //Eğer home page de göster dersek göstereceğiz.
         public bool IsApproved { get; set; }
 
+        public List<Category> SelectedCategories { get; set; } //Product eklerken hangi kategorilere ait olmasını seçmek icin yanında categorileri de taşı
 
     }
 }

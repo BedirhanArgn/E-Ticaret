@@ -12,7 +12,6 @@ namespace E_ticaret.data.Abstract
         List<Product> GetProductsByCategory(string name,int page,int pageSize);
         List<Product> GetHomePageProducts();
         int getCountByCategory(string category);
-
-
+        Product GetByIdWithCategories(int id);
     }
 }

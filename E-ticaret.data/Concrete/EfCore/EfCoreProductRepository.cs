@@ -12,6 +12,14 @@ namespace E_ticaret.data.Concrete.EfCore
 
     public class EfCoreProductRepository : EfCoreGenericRepository<Product, ShopContext>, IProductRepository
     {
+        public Product GetByIdWithCategories(int id)
+        {
+            using(var context=new ShopContext())
+            {
+                return context.Products.Where(i => i.ProductId == id).Include(a => a.ProductCategories).ThenInclude(b => b.Category).FirstOrDefault();
+            }
+
+        }
         public int getCountByCategory(string category)
         {
             using (var context = new ShopContext())
