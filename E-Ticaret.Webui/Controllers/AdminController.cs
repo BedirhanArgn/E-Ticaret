@@ -6,6 +6,7 @@ using E_ticaret.business.Abstract;
 using E_ticaret.Entity;
 using E_Ticaret.ViewModel;
 using E_Ticaret.Webui.Models;
+using E_Ticaret.Webui.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -19,9 +20,11 @@ namespace E_Ticaret.Webui.Controllers
     {
         private IProductService _productService;
 
-        public AdminController(IProductService productService)
+        private ICategoryService _categoryService;
+        public AdminController(IProductService productService,ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
         public IActionResult ProductList()
         {
@@ -131,6 +134,121 @@ namespace E_Ticaret.Webui.Controllers
 
             TempData["message"] = JsonConvert.SerializeObject(msg);
             return RedirectToAction("ProductList");
+        }
+
+        public IActionResult CategoryList()
+        {
+            return View(new CategoryListModel()
+            {
+                Categories = _categoryService.getAll()
+            }) ;
+        }
+        [HttpGet]
+        public IActionResult CategoryCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CategoryCreate(CategoryModel category)
+        {
+           
+            var entity = new Category()
+            {
+                Description = category.Description,
+                CategoryId = category.CategoryId,
+                Name = category.Name,
+                Url = category.Url
+            };
+            _categoryService.Create(entity);
+          
+            var msg = new AlertMessage()
+            {
+                AlertType = "success",
+                Message = $"{ entity.Name } isimli kategori eklendi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpGet]
+        public IActionResult CategoryEdit(int? id)
+        {
+            if(id==null)
+            {
+                return NotFound();
+            }
+            var ExistControl = _categoryService.GetByIdWithProducts((int)id);
+            if(ExistControl==null)
+            {
+                return NotFound();
+            }
+
+
+            var model = new CategoryModel()
+            {
+                CategoryId = ExistControl.CategoryId,
+                Description = ExistControl.Description,
+                Name = ExistControl.Name,
+                Url = ExistControl.Url,
+                Products = ExistControl.ProductCategories.Select(p => p.Product).ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+
+        public IActionResult CategoryEdit(CategoryModel cat)
+        {
+
+            var entity = _categoryService.GetByIdWithProducts(cat.CategoryId);
+
+            if(entity!=null)
+            {
+                entity.CategoryId = cat.CategoryId;
+                entity.Description = cat.Description;
+                entity.Name = cat.Name;
+                entity.Url = cat.Url;
+            }
+
+            _categoryService.Update(entity);
+            var msg = new AlertMessage()
+            {
+                AlertType = "success",
+                Message = $"{ entity.Name } isimli kategori güncellendi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+            return RedirectToAction("CategoryList");
+        }
+
+        public IActionResult CategoryDelete(int? categoryid)
+        {
+            var entity = _categoryService.getById((int)categoryid);
+
+            if (entity != null)
+            {
+                _categoryService.Delete(entity);
+            }
+            var msg = new AlertMessage()
+            {
+                AlertType = "danger",
+                Message = $"{ entity.Name } isimli kategori silindi"
+            };
+
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+
+            return RedirectToAction("CategoryList");
+        }
+
+
+        [HttpPost]
+        public IActionResult DeleteFromCategory(int productid,int categoryId)
+        {
+            _categoryService.DeleteFromCategory(productid, categoryId);
+            return RedirectToAction("CategoryList");
         }
 
 

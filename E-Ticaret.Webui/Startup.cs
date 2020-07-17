@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using E_ticaret.business.Abstract;
@@ -53,13 +54,37 @@ namespace E_Ticaret.Webui
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-        
+
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
            {
+               endpoints.MapControllerRoute(
+                   name: "admincategory",
+                   pattern: "admin/categories",
+                   defaults: new { controller = "Admin", action = "CategoryList" }
+                   );
+
+               endpoints.MapControllerRoute(
+                   name: "admincategorycreate",
+                   pattern: "admin/categories/create",
+                   defaults: new { controller = "Admin", action = "CategoryCreate" }
+                   );
+
+               endpoints.MapControllerRoute(
+                  name: "admincategorydelete",
+                  pattern: "admin/deletecategory",
+                  defaults: new { controller = "Admin", action = "CategoryDelete" }
+                  );
+
+               endpoints.MapControllerRoute(
+                   name:"admincategoryedit",
+                   pattern:"admin/categories/{id?}",
+                   defaults: new {controller="Admin",action="CategoryEdit"}             
+                   );
+
                endpoints.MapControllerRoute(
                     name: "adminproductlist",
                     pattern: "admin/products",
@@ -79,38 +104,38 @@ namespace E_Ticaret.Webui
                     defaults: new { controller = "Admin", action = "Edit" }
 
                     );
-                
-                endpoints.MapControllerRoute(
-                    name:"search",
-                    pattern:"search",
-                    defaults: new {controller="Shop",action="search"}
-                    );
 
-                endpoints.MapControllerRoute(
-                    name:"about",
-                    pattern:"about",
-                    defaults: new {controller="Shop",action="about"}
-                    );
+               endpoints.MapControllerRoute(
+                   name: "search",
+                   pattern: "search",
+                   defaults: new { controller = "Shop", action = "search" }
+                   );
 
-                endpoints.MapControllerRoute(
-                       name: "productdetails",
-                       pattern: "{productname}",
-                       defaults: new { controller = "Shop", action = "details" }
-                       );
+               endpoints.MapControllerRoute(
+                   name: "about",
+                   pattern: "about",
+                   defaults: new { controller = "Shop", action = "about" }
+                   );
 
-                endpoints.MapControllerRoute(
-                    name:"products",
-                    pattern:"products/{category?}",
-                    defaults: new {controller="Shop",action="list"}  
-                    );
-                
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
-                    
-                    
-                    );
-            });
+               endpoints.MapControllerRoute(
+                      name: "productdetails",
+                      pattern: "{productname}",
+                      defaults: new { controller = "Shop", action = "details" }
+                      );
+
+               endpoints.MapControllerRoute(
+                   name: "products",
+                   pattern: "products/{category?}",
+                   defaults: new { controller = "Shop", action = "list" }
+                   );
+
+               endpoints.MapControllerRoute(
+                   name: "default",
+                   pattern: "{controller=Home}/{action=Index}/{id?}"
+
+
+                   );
+           });
         }
     }
 }

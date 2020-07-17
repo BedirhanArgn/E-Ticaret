@@ -1,0 +1,55 @@
+﻿@model E_Ticaret.Webui.ViewModel.CategoryListModel
+<div class="row">
+    <a href="/admin/categories/create" class="btn btn-primary ml-3">Add Category</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Category Create</h1>
+        <hr />
+        @if (Model.Categories.Count() > 0)
+        {
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>ID </td>
+                        <td>NAME</td>
+                        <td>URL</td>
+                        <td>DESCRIPTION</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <tr>
+                            <td>@item.CategoryId </td>
+                            <td>@item.Name</td>
+                            <td>@item.Url</td>
+                            <td>@item.Description</td>
+                            <td>
+                                <a href="/admin/categories/@item.CategoryId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                <form method="post" style="display:inline;" action="/admin/deletecategory">
+                                    <input type="hidden" name="categoryid" value="@item.CategoryId" />
+                                    <button type="submit" class="btn btn-danger btn-sm mr-2">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <h3>No Products</h3>
+
+            </div>
+
+        }
+
+    </div>
+
+
+</div>

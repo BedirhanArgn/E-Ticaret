@@ -9,5 +9,9 @@ namespace E_ticaret.data.Abstract
     {
         List<Category> getPopularCategory();
 
+        Category GetByIdWithProducts(int categoryid);
+
+        void DeleteFromCategory(int productId, int categoryId);
+
     }
 }
