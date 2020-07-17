@@ -77,5 +77,10 @@ namespace E_ticaret.business.Concreate
         {
             _productRepository.Update(entity);
         }
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+            _productRepository.Update(entity, categoryIds);
+        }
     }
 }

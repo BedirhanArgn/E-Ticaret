@@ -18,5 +18,6 @@ namespace E_ticaret.business.Abstract
         void Delete(Product entity);
         int getCountByCategory(string category);
         Product GetByIdWithCategories(int id);
+        void Update(Product entity, int[] categoryIds);
     }
 }

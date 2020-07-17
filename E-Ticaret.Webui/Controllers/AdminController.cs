@@ -95,7 +95,7 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductView model)
+        public IActionResult Edit(ProductView model,int[] categoryId)
         {
             var entity = _productService.getById(model.ProductId);
             if(entity==null)
@@ -109,7 +109,7 @@ namespace E_Ticaret.Webui.Controllers
             entity.Price = model.Price;
             entity.Url = model.Url;
             entity.Description = model.Description;
-            _productService.Update(entity);
+            _productService.Update(entity, categoryId);
 
             var msg = new AlertMessage()
             {

@@ -14,7 +14,7 @@ namespace E_ticaret.data.Concrete.EfCore
     {
         public Product GetByIdWithCategories(int id)
         {
-            using(var context=new ShopContext())
+            using (var context = new ShopContext())
             {
                 return context.Products.Where(i => i.ProductId == id).Include(a => a.ProductCategories).ThenInclude(b => b.Category).FirstOrDefault();
             }
@@ -99,13 +99,41 @@ namespace E_ticaret.data.Concrete.EfCore
                 return products.ToList();
             }
         }
-            public List<Product> GetTop5()
+        public List<Product> GetTop5()
+        {
+            using (var context = new ShopContext())
             {
-                using (var context = new ShopContext())
-                {
-                    return context.Products.OrderByDescending(i => i.ProductId).Take(5).ToList();
+                return context.Products.OrderByDescending(i => i.ProductId).Take(5).ToList();
 
-                }
             }
         }
-    } 
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+            using (var context = new ShopContext())
+            {
+
+                var product = context.Products.Include(i => i.ProductCategories).FirstOrDefault(i => i.ProductId == entity.ProductId);
+                if (product != null)
+                {
+                    product.Name = entity.Name;
+                    product.Price = entity.Price;
+                    product.Description = entity.Description;
+                    product.Url = entity.Url;
+                    product.ImageUrl = entity.ImageUrl;
+                    product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
+                    {
+                        ProductId = entity.ProductId,
+                        CategoryId=catid
+
+                    }).ToList() ;
+                    context.SaveChanges();
+                }
+
+
+            }
+
+
+        }
+    }
+}

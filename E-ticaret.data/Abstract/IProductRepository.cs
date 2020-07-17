@@ -13,5 +13,7 @@ namespace E_ticaret.data.Abstract
         List<Product> GetHomePageProducts();
         int getCountByCategory(string category);
         Product GetByIdWithCategories(int id);
+        void Update(Product entity, int[] categoryIds);
+
     }
 }

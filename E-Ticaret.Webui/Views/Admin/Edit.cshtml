@@ -55,7 +55,7 @@
             @foreach(var item in (List<Category>)ViewBag.Categories)
             {
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input"  id="category_@(item.CategoryId)" @(Model.SelectedCategories.Any(i=>i.CategoryId==item.CategoryId)?"checked":"")/> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yapıldı-->
+                    <input type="checkbox" class="custom-control-input"  name="categoryId" value="@item.CategoryId" id="category_@(item.CategoryId)" @(Model.SelectedCategories.Any(i=>i.CategoryId==item.CategoryId)?"checked":"")/> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
                     <label class="custom-control-label" for="category_@(item.CategoryId)">@item.Name</label>
 
                 </div>
