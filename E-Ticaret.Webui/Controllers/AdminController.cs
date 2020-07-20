@@ -46,28 +46,33 @@ namespace E_Ticaret.Webui.Controllers
 
         public IActionResult CreateProduct(ProductView product)
         {
-            var entity = new Product()
+            if(ModelState.IsValid)
             {
-                Name = product.Name,
-                Description = product.Description,
-                Url = product.Url,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl
-            };
+                var entity = new Product()
+                {
+                    Name = product.Name,
+                    Description = product.Description,
+                    Url = product.Url,
+                    Price = product.Price,
+                    ImageUrl = product.ImageUrl
+                };
 
-            _productService.Create(entity);
-            //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
+                _productService.Create(entity);
+                //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
 
 
-            var msg = new AlertMessage()
-            {
-                AlertType = "success",
-                Message = $"{ entity.Name } isimli ürün eklendi"
-            };
+                var msg = new AlertMessage()
+                {
+                    AlertType = "success",
+                    Message = $"{ entity.Name } isimli ürün eklendi"
+                };
 
-            TempData["message"] = JsonConvert.SerializeObject(msg);
+                TempData["message"] = JsonConvert.SerializeObject(msg);
+                return RedirectToAction("ProductList");
+  
+            }
+            return View(product);
 
-            return RedirectToAction("ProductList");
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -97,29 +102,33 @@ namespace E_Ticaret.Webui.Controllers
         [HttpPost]
         public IActionResult Edit(ProductView model,int[] categoryId)
         {
-            var entity = _productService.getById(model.ProductId);
-            if(entity==null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                var entity = _productService.getById(model.ProductId);
+                if (entity == null)
+                {
+                    return NotFound();
+                }
+
+                entity.ProductId = model.ProductId;
+                entity.ImageUrl = model.ImageUrl;
+                entity.Name = model.Name;
+                entity.Price = model.Price;
+                entity.Url = model.Url;
+                entity.Description = model.Description;
+                _productService.Update(entity, categoryId);
+
+                var msg = new AlertMessage()
+                {
+                    AlertType = "success",
+                    Message = $"{ entity.Name } isimli ürün güncellendi"
+                };
+                TempData["message"] = JsonConvert.SerializeObject(msg);
+                return RedirectToAction("ProductList");
             }
-
-            entity.ProductId = model.ProductId;
-            entity.ImageUrl = model.ImageUrl;
-            entity.Name = model.Name;
-            entity.Price = model.Price;
-            entity.Url = model.Url;
-            entity.Description = model.Description;
-            _productService.Update(entity, categoryId);
-
-            var msg = new AlertMessage()
-            {
-                AlertType = "success",
-                Message = $"{ entity.Name } isimli ürün güncellendi"
-            };
-
-            TempData["message"] = JsonConvert.SerializeObject(msg);
-            return RedirectToAction("ProductList");
-        }
+            ViewBag.Categories = _categoryService.getAll(); //validation çalışması için ekledim Ayrıca selectedCategories bilgileri yok hata dan sonra 
+            return View(model);
+            }
 
         public IActionResult DeleteProduct(int productId)
         {

@@ -129,8 +129,6 @@ namespace E_ticaret.data.Concrete.EfCore
                     }).ToList() ;
                     context.SaveChanges();
                 }
-
-
             }
 
 
