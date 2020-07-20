@@ -217,10 +217,8 @@ namespace E_Ticaret.Webui.Controllers
         public IActionResult CategoryEdit(CategoryModel cat)
         {
             var entity = _categoryService.GetByIdWithProducts(cat.CategoryId);
-
             if (ModelState.IsValid)
             {
-
                 if (entity != null)
                 {
                     entity.CategoryId = cat.CategoryId;
