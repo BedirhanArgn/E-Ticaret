@@ -164,25 +164,28 @@ namespace E_Ticaret.Webui.Controllers
         [HttpPost]
         public IActionResult CategoryCreate(CategoryModel category)
         {
-           
-            var entity = new Category()
+            if (ModelState.IsValid)
             {
-                Description = category.Description,
-                CategoryId = category.CategoryId,
-                Name = category.Name,
-                Url = category.Url
-            };
-            _categoryService.Create(entity);
-          
-            var msg = new AlertMessage()
-            {
-                AlertType = "success",
-                Message = $"{ entity.Name } isimli kategori eklendi"
-            };
+                var entity = new Category()
+                {
+                    Description = category.Description,
+                    CategoryId = category.CategoryId,
+                    Name = category.Name,
+                    Url = category.Url
+                };
+                _categoryService.Create(entity);
 
-            TempData["message"] = JsonConvert.SerializeObject(msg);
+                var msg = new AlertMessage()
+                {
+                    AlertType = "success",
+                    Message = $"{ entity.Name } isimli kategori eklendi"
+                };
 
-            return RedirectToAction("CategoryList");
+                TempData["message"] = JsonConvert.SerializeObject(msg);
+
+                return RedirectToAction("CategoryList");
+            }
+            return View(category);
         }
 
         [HttpGet]
@@ -197,7 +200,6 @@ namespace E_Ticaret.Webui.Controllers
             {
                 return NotFound();
             }
-
 
             var model = new CategoryModel()
             {
@@ -214,26 +216,31 @@ namespace E_Ticaret.Webui.Controllers
 
         public IActionResult CategoryEdit(CategoryModel cat)
         {
-
             var entity = _categoryService.GetByIdWithProducts(cat.CategoryId);
 
-            if(entity!=null)
+            if (ModelState.IsValid)
             {
-                entity.CategoryId = cat.CategoryId;
-                entity.Description = cat.Description;
-                entity.Name = cat.Name;
-                entity.Url = cat.Url;
+
+                if (entity != null)
+                {
+                    entity.CategoryId = cat.CategoryId;
+                    entity.Description = cat.Description;
+                    entity.Name = cat.Name;
+                    entity.Url = cat.Url;
+                }
+
+                _categoryService.Update(entity);
+                var msg = new AlertMessage()
+                {
+                    AlertType = "success",
+                    Message = $"{ entity.Name } isimli kategori güncellendi"
+                };
+
+                TempData["message"] = JsonConvert.SerializeObject(msg);
+                return RedirectToAction("CategoryList");
             }
-
-            _categoryService.Update(entity);
-            var msg = new AlertMessage()
-            {
-                AlertType = "success",
-                Message = $"{ entity.Name } isimli kategori güncellendi"
-            };
-
-            TempData["message"] = JsonConvert.SerializeObject(msg);
-            return RedirectToAction("CategoryList");
+            cat.Products = entity.ProductCategories.Select(p => p.Product).ToList();
+            return View(cat);
         }
 
         public IActionResult CategoryDelete(int? categoryid)

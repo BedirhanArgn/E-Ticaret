@@ -8,6 +8,7 @@
     <div class="col-md-4">
 
         <form asp-controller="Admin" asp-action="CategoryEdit" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId" />
             <div class="row">
                 <div class="col-md-10">
@@ -15,6 +16,7 @@
                         <label asp-for="Name" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
                             <input class="form-control" asp-for="Name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -22,6 +24,8 @@
                         <label asp-for="Url" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
                             <input class="form-control" asp-for="Url" />
+                            <span asp-validation-for="Url" class="text-danger"></span>
+
                         </div>
                     </div>
 
