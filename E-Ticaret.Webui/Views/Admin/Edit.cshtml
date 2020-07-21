@@ -71,9 +71,19 @@
                     <label class="custom-control-label" for="category_@(item.CategoryId)">@item.Name</label>
 
                 </div>
-
-
             }
+
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" checked="@Model.IsApproved" class="custom-control-input" asp-for="@Model.IsApproved"/> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
+                <label class="custom-control-label" asp-for="@Model.IsApproved">IsApproved</label>
+
+            </div>
+
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" checked="@Model.IsHome" class="custom-control-input" asp-for="@Model.IsHome"   /> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
+                <label class="custom-control-label" asp-for="@Model.IsHome">IsHome</label>
+
+            </div>
 
         </div>
     </div>

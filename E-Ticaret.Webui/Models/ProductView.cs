@@ -14,12 +14,12 @@ namespace E_Ticaret.Webui.Models
         //[Display(Name ="Name",Prompt ="Enter a Name")]
         public string Name { get; set; }
         
-        //[Required(ErrorMessage = "Price Bu alan zorunludur")]
+        [Required(ErrorMessage = "Price Bu alan zorunludur")]
         public double? Price { get; set; }
 
-       // [Required(ErrorMessage = "Description bu alan zorunludur")]
+       [Required(ErrorMessage = "Description bu alan zorunludur")]
         public string Description { get; set; }
-        //[Required(ErrorMessage="Url bu alan zorunludur.")]
+        [Required(ErrorMessage="Url bu alan zorunludur.")]
         public string Url { get; set; }
         public String ImageUrl { get; set; }
         public bool IsHome { get; set; } //Eğer home page de göster dersek göstereceğiz.

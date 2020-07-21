@@ -92,6 +92,8 @@ namespace E_Ticaret.Webui.Controllers
             {
                 ProductId = product.ProductId,
                 Description = product.Description,
+                IsApproved=product.IsApproved,
+                IsHome=product.IsHome,
                 ImageUrl = product.ImageUrl,
                 Url = product.Url,
                 Name = product.Name,
@@ -122,6 +124,8 @@ namespace E_Ticaret.Webui.Controllers
                 entity.Price = model.Price;
                 entity.Url = model.Url;
                 entity.Description = model.Description;
+                entity.IsHome = model.IsHome;
+                entity.IsApproved = model.IsApproved;
                 _productService.Update(entity, categoryId);
 
                 var msg = new AlertMessage()
@@ -186,9 +190,8 @@ namespace E_Ticaret.Webui.Controllers
                     AlertType = "success",
                     Message = $"{ entity.Name } isimli kategori eklendi"
                 };
-
+                
                 TempData["message"] = JsonConvert.SerializeObject(msg);
-
                 return RedirectToAction("CategoryList");
             }
             return View(category);
