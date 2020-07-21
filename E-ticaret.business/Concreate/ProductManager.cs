@@ -15,14 +15,24 @@ namespace E_ticaret.business.Concreate
         {
             _productRepository = productRepository;
         }
-        public void Create(Product entity)
+
+
+        public bool Create(Product entity)
         {
             //İş kuralları uygula bazı kurallar uygulayarak ekle 
-            _productRepository.Create(entity);
+
+            if(Validation(entity))
+            {
+                _productRepository.Create(entity);
+                return true;
+            }
+            return false;
+
         }
 
         public void Delete(Product entity)
         {
+            
 
             _productRepository.Delete(entity);
 
@@ -81,6 +91,22 @@ namespace E_ticaret.business.Concreate
         public void Update(Product entity, int[] categoryIds)
         {
             _productRepository.Update(entity, categoryIds);
+        }
+         public string ErrorMessage { get ; set ; }
+
+        public bool Validation(Product entity)
+        {
+            var isvalid = true;
+
+            if(string.IsNullOrEmpty(entity.Name)) //business katmanında yapılabilir validationlar
+            {
+                ErrorMessage += "ürün ismi boş geçilmez\n";
+                isvalid = false;
+           }
+
+            return isvalid;
+
+
         }
     }
 }

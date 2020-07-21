@@ -57,19 +57,25 @@ namespace E_Ticaret.Webui.Controllers
                     ImageUrl = product.ImageUrl
                 };
 
-                _productService.Create(entity);
-                //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
-
-
-                var msg = new AlertMessage()
+                if (_productService.Create(entity))
                 {
-                    AlertType = "success",
-                    Message = $"{ entity.Name } isimli ürün eklendi"
-                };
+                    //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
 
-                TempData["message"] = JsonConvert.SerializeObject(msg);
-                return RedirectToAction("ProductList");
-  
+
+                    //var msg = new AlertMessage()
+                    //{
+                    //    AlertType = "success",
+                    //    Message = $"{ entity.Name } isimli ürün eklendi"
+                    //};
+
+                    //TempData["message"] = JsonConvert.SerializeObject(msg);
+
+                    CreateMessage("kayıt eklendi", "success");
+
+                    return RedirectToAction("ProductList");
+                }
+                CreateMessage(_productService.ErrorMessage, "success");
+                return View(product);
             }
             return View(product);
 
@@ -268,6 +274,19 @@ namespace E_Ticaret.Webui.Controllers
             return RedirectToAction("CategoryList");
         }
 
+
+
+        public void CreateMessage(string message,string type)
+        {
+            var msg = new AlertMessage()
+            {
+                AlertType = type,
+                Message = message
+            };
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+
+
+        }
 
     }
 }

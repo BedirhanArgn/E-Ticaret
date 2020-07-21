@@ -15,6 +15,8 @@ namespace E_ticaret.business.Concreate
         {
             _categoryRepository = categoryRepository;
         }
+
+
         public void Create(Category entity)
         {
             _categoryRepository.Create(entity);
@@ -48,6 +50,22 @@ namespace E_ticaret.business.Concreate
         public void Update(Category entity)
         {
             _categoryRepository.Update(entity);
+        }
+
+        public string ErrorMessage { get; set; }
+
+        public bool Validation(Category entity)
+        {
+            var isValid = true;
+            if(string.IsNullOrEmpty(entity.Name))
+            {
+                ErrorMessage += "category ismi girmelisiniz.\n";
+                isValid = false;
+            }
+
+            return isValid;
+
+
         }
     }
 }

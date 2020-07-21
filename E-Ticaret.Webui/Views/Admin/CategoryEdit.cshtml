@@ -45,47 +45,51 @@
         </form>
     </div>
     <div class="col-md-8">
-                @if (Model.Products.Count() > 0)
-                {
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <td>ID </td>
-                                <td>NAME</td>
-                                <td>IMAGE</td>
-                                <td>PRICE</td>
-                                <td></td>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Products)
-                            {
-                                <tr>
-                                    <td>@item.ProductId </td>
-                                    <td>@item.Name</td>
-                                    <td><img src="~/img/@item.ImageUrl" width="80" /></td>
-                                    <td>@item.Price</td>
-                                    <td>
-                                        <a href="/admin/products/@item.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                        <form method="post" style="display:inline;" action="/admin/deletefromcategory">
-                                            <input type="hidden" name="productId" value="@item.ProductId" />
-                                            <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+        @if (Model.Products.Count() > 0)
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>ID </td>
+                        <td>NAME</td>
+                        <td>IMAGE</td>
+                        <td>PRICE</td>
+                        <td></td>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>@item.ProductId </td>
+                            <td>@item.Name</td>
+                            <td><img src="~/img/@item.ImageUrl" width="80" /></td>
+                            <td>@item.Price</td>
+                            <td>
+                                <a href="/admin/products/@item.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                <form method="post" style="display:inline;" action="/admin/deletefromcategory">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="categoryId" value="@Model.CategoryId" />
 
-                                            <button class="btn btn-danger btn-sm mr-2">Delete</button>
-                                        </form>
+                                    <button class="btn btn-danger btn-sm mr-2">Delete</button>
+                                </form>
 
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
 
-                    </table>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        <h3>No Products</h3>
-                    </div>
-                }
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <h3>No Products</h3>
             </div>
-      </div>
+        }
+    </div>
+</div>
 
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

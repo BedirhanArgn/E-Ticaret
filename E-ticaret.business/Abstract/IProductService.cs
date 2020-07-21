@@ -5,7 +5,7 @@ using System.Text;
 
 namespace E_ticaret.business.Abstract
 {
-   public interface IProductService
+   public interface IProductService:IValidator<Product>
     {
        Product getById(int id);
         Product getProductDetails(string url);
@@ -13,7 +13,7 @@ namespace E_ticaret.business.Abstract
         List<Product> GetHomePageProducts();
         List<Product> getAll();
         List<Product> getSearchResult(string searchString);
-        void Create(Product entity);
+        bool Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);
         int getCountByCategory(string category);
