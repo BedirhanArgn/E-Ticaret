@@ -6,6 +6,7 @@
 <h1 class="h3">Edit Product</h1>
 <hr />
 <form asp-controller="Admin" asp-action="Edit" method="post" enctype="multipart/form-data">
+    <!--Bunu foot post için yazdık-->
     <div class="row">
         <div class="col-md-12">
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -31,7 +32,7 @@
             <div class="form-group row">
                 <label asp-for="Description" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" asp-for="Description"></textarea>
+                    <textarea id="editor" class="form-control" asp-for="Description"></textarea>
                 </div>
             </div>
 
@@ -40,7 +41,7 @@
                 <div class="col-sm-10">
                     <input type="hidden" asp-for="ImageUrl" />
                     <img src="~/img/@Model.ImageUrl" width="80" />
-                    <input  type="file" name="file" id="" />
+                    <input type="file" name="file" id="" />
                 </div>
             </div>
 
@@ -76,13 +77,13 @@
             }
 
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" checked="@Model.IsApproved" class="custom-control-input" asp-for="@Model.IsApproved"/> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
+                <input type="checkbox" checked="@Model.IsApproved" class="custom-control-input" asp-for="@Model.IsApproved" /> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
                 <label class="custom-control-label" asp-for="@Model.IsApproved">IsApproved</label>
 
             </div>
 
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" checked="@Model.IsHome" class="custom-control-input" asp-for="@Model.IsHome"   /> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
+                <input type="checkbox" checked="@Model.IsHome" class="custom-control-input" asp-for="@Model.IsHome" /> <!--ürünlerin dahil olduğu kategriler işaretli gelsin diye yazıldı-->
                 <label class="custom-control-label" asp-for="@Model.IsHome">IsHome</label>
 
             </div>
@@ -93,4 +94,12 @@
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/20.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 }

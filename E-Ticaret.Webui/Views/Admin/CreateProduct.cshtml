@@ -32,7 +32,7 @@
             <div class="form-group row">
                 <label asp-for="Description" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" asp-for="Description" c></textarea>
+                    <textarea id="editor" class="form-control" asp-for="Description"></textarea>
                 </div>
             </div>
 
@@ -65,4 +65,18 @@
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+<script>
+    CKEDITOR.replace("editor",
+        {
+            height: 500
+        });
+    
+</script>
 }

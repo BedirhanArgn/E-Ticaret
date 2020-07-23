@@ -19,6 +19,6 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <p class="p-3">@Model.product.Description</p>
+        <p class="p-3">@Html.Raw(@Model.product.Description)</p> <!--işler veriyi <p> etiketleri çıkmaz ekrana-->
     </div>
 </div>
