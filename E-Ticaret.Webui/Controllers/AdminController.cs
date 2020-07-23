@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using E_ticaret.business.Abstract;
@@ -7,6 +8,7 @@ using E_ticaret.Entity;
 using E_Ticaret.ViewModel;
 using E_Ticaret.Webui.Models;
 using E_Ticaret.Webui.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -108,7 +110,7 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductView model,int[] categoryId)
+        public async Task<IActionResult> Edit(ProductView model,int[] categoryId,IFormFile file) //resim upload için gerekli
         {
             if (ModelState.IsValid)
             {
@@ -119,13 +121,29 @@ namespace E_Ticaret.Webui.Controllers
                 }
 
                 entity.ProductId = model.ProductId;
-                entity.ImageUrl = model.ImageUrl;
                 entity.Name = model.Name;
                 entity.Price = model.Price;
                 entity.Url = model.Url;
                 entity.Description = model.Description;
                 entity.IsHome = model.IsHome;
                 entity.IsApproved = model.IsApproved;
+                if(file!=null)
+                {
+                    var extension = Path.GetExtension(file.FileName);
+                    var randomName = string.Format($"{Guid.NewGuid()}{extension}");
+                    entity.ImageUrl = randomName;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", file.FileName);
+                    
+                    using(var stream=new FileStream(path,FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                
+                
+                }
+                    
+
+
                 _productService.Update(entity, categoryId);
 
                 var msg = new AlertMessage()
