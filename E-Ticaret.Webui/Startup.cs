@@ -53,7 +53,7 @@ namespace E_Ticaret.Webui
 
                 options.User.RequireUniqueEmail = true; //unique emaail adresleri olsun her kullanýcýnýn 
 
-                options.SignIn.RequireConfirmedEmail = true; //Kayýt olduktan email ile token gönderecek 
+                options.SignIn.RequireConfirmedEmail = false; //Kayýt olduktan email ile token gönderecek 
                 options.SignIn.RequireConfirmedPhoneNumber = false; //telefon doðrulamasý
                 
             });
@@ -105,7 +105,6 @@ namespace E_Ticaret.Webui
             app.UseStaticFiles();
             app.UseAuthentication(); //Identity için auth'ý açtýk.
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
