@@ -10,12 +10,14 @@ using E_ticaret.data.Concrete.EfCore;
 using E_Ticaret.Webui.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace E_Ticaret.Webui
 {
@@ -35,6 +37,45 @@ namespace E_Ticaret.Webui
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer("Server=DESKTOP-CH0UVQ2; Database=shopDb; User Id=sa; Password=bedir123456;"));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); //kullanýcýlarý authotechticate için yazdýk tarayýcýya cokie býraktýk.Her seferinde logine atmasýn diye 
             /**************************************************************************************************/
+
+            services.Configure<IdentityOptions>(options => {
+                options.Password.RequireDigit = true; //Sayý olmalý
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = true; //@ * gibi karakterler olmalý
+
+                options.Lockout.MaxFailedAccessAttempts = 5; //5 giriþten sonra kilitlenioyr. 
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMilliseconds(5); //5 dk sonra açýlýr
+                options.Lockout.AllowedForNewUsers=true; //üsttekilerle alakalý
+
+                //options.User.AllowedUserNameCharacters = ""; //olmasýný istediðiniz kesin karaterrleri yaz
+
+                options.User.RequireUniqueEmail = true; //unique emaail adresleri olsun her kullanýcýnýn 
+
+                options.SignIn.RequireConfirmedEmail = true; //Kayýt olduktan email ile token gönderecek 
+                options.SignIn.RequireConfirmedPhoneNumber = false; //telefon doðrulamasý
+                
+            });
+
+            services.ConfigureApplicationCookie(option => //cookie burada yaratýlýr.
+            {
+                option.LoginPath = "/account/login";
+                option.LogoutPath = "/account/logout";
+                option.AccessDeniedPath = "/account/accessdenied"; //yanlýþ yere girenler için gereklidir. 
+                option.SlidingExpiration = true; //session süresi 20 dk dýr 20 dk boyunca herhangi bir istek gelmezse oturum kapatýlýr. 
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(36); //36 dk'lýk bir session oluþtur.
+
+                option.Cookie = new CookieBuilder
+                {
+                    HttpOnly = true, //cookie'yi sadece http olarak alabiliriz.
+                    Name=".Shopapp.Security.Cookie"
+                };
+
+
+            });
+
+
 
             services.AddControllersWithViews();
             //Businness katmaný ui katmanda tanýtmak için doldur
