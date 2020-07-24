@@ -7,9 +7,12 @@ using E_ticaret.business.Abstract;
 using E_ticaret.business.Concreate;
 using E_ticaret.data.Abstract;
 using E_ticaret.data.Concrete.EfCore;
+using E_Ticaret.Webui.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +31,11 @@ namespace E_Ticaret.Webui
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //IDENTITY DEFINATION
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer("Server=DESKTOP-CH0UVQ2; Database=shopDb; User Id=sa; Password=bedir123456;"));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); //kullanýcýlarý authotechticate için yazdýk tarayýcýya cokie býraktýk.Her seferinde logine atmasýn diye 
+            /**************************************************************************************************/
+
             services.AddControllersWithViews();
             //Businness katmaný ui katmanda tanýtmak için doldur
             services.AddScoped<IProductRepository, EfCoreProductRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
@@ -54,7 +62,7 @@ namespace E_Ticaret.Webui
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseAuthentication(); //Identity için auth'ý açtýk.
             app.UseRouting();
 
             app.UseAuthorization();
