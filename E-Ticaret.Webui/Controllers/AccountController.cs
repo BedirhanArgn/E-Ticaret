@@ -23,9 +23,12 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl=null) //kullanıcıyı loginden önceyi sayfaya yönlendirmemiz gerek login olduktan sonra bu yüzden return urli alıyoruz burada
         {
-            return View();
+            return View(new LoginModel
+            {
+                ReturnUrl = ReturnUrl //bunu daha sonra input hiddenda tutarız (yanlis bir şeyler girildiğinde tekrar post metodundan geleceği için return url boş gelmesin)
+            }) ;
         }
 
         [HttpPost]
@@ -37,22 +40,23 @@ namespace E_Ticaret.Webui.Controllers
                 return View(model);
             }
 
-            var user = await _usermanager.FindByNameAsync(model.UserName); //Var mı diye control
+            var user = await _usermanager.FindByEmailAsync(model.Email); //username var mı diye control
 
             if(user==null)
             {
-                ModelState.AddModelError("", "Bu kullanıcı adı ile daha önce hespa oluşturulmamış");
+                ModelState.AddModelError("", "Bu email adresi ile daha önce hespa oluşturulmamış");
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false,false); //5.parametre hesap kilitlesin mi
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true,false); //4.parametre 20 dk lık seesion süresi tanımlansın mı ,5.parametre hesap kilitlesin mi
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index","Home");
+                return Redirect(model.ReturnUrl??"~/"); //null sa home pageye git dedik.
             }
+            ModelState.AddModelError("", "Girilen email veya şifre yanlış");
 
-            return View();
+            return View(model);
         }
 
 
@@ -91,6 +95,16 @@ namespace E_Ticaret.Webui.Controllers
             ModelState.AddModelError("Password","Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
             return View();
         }
+
+
+        public async Task<IActionResult> Logout()
+        {
+
+            await _signInManager.SignOutAsync();
+            return Redirect("~/");
+            
+        }
+
 
 
     }
