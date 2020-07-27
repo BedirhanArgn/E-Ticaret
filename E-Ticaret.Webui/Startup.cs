@@ -53,7 +53,7 @@ namespace E_Ticaret.Webui
 
                 options.User.RequireUniqueEmail = true; //unique emaail adresleri olsun her kullanýcýnýn 
 
-                options.SignIn.RequireConfirmedEmail = false; //Kayýt olduktan email ile token gönderecek 
+                options.SignIn.RequireConfirmedEmail = true; //Kayýt olduktan email ile token gönderecek 
                 options.SignIn.RequireConfirmedPhoneNumber = false; //telefon doðrulamasý
                 
             });
@@ -69,7 +69,8 @@ namespace E_Ticaret.Webui
                 option.Cookie = new CookieBuilder
                 {
                     HttpOnly = true, //cookie'yi sadece http olarak alabiliriz.
-                    Name=".Shopapp.Security.Cookie"
+                    Name=".Shopapp.Security.Cookie",
+                    SameSite=SameSiteMode.Strict //B kullanýcýsý Anýn cookiesine sahip olsa bile onun adýna iþlem ypaamz bunu yazarsak 
                 };
 
 

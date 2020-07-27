@@ -3,6 +3,7 @@ using E_Ticaret.Webui.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace E_Ticaret.Webui.Controllers
 {
+    [AutoValidateAntiforgeryToken] //her postta csrf ataklarının önüne geçer 
     public class AccountController : Controller
     {
         private UserManager<User> _usermanager; //kullanıcı yönetimi
@@ -32,7 +34,7 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
             if(!ModelState.IsValid)
@@ -47,6 +49,15 @@ namespace E_Ticaret.Webui.Controllers
                 ModelState.AddModelError("", "Bu email adresi ile daha önce hespa oluşturulmamış");
                 return View(model);
             }
+
+            if (!await _usermanager.IsEmailConfirmedAsync(user))
+            {
+
+                ModelState.AddModelError("", "Lütfen hesabınıza gelen maili onaylayınız!");
+                return View(model);
+            }
+
+
 
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true,false); //4.parametre 20 dk lık seesion süresi tanımlansın mı ,5.parametre hesap kilitlesin mi
 
@@ -69,6 +80,7 @@ namespace E_Ticaret.Webui.Controllers
       }
 
         [HttpPost]
+        [ValidateAntiForgeryToken] //csrf ataklarının önüne geçer
         public  async Task<IActionResult> Register(RegisterModel model)
         {
             if(!ModelState.IsValid)
@@ -88,7 +100,12 @@ namespace E_Ticaret.Webui.Controllers
 
             if(result.Succeeded)
             {
-                    //Eğer mail dorulama yapmak istersen bu kısımda bir token oluştur.              
+                //Eğer mail dorulama yapmak istersen bu kısımda bir token oluştur.    
+                var code = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
+                var url = Url.Action("ConfirmedEmail","Account",new {  //bu kısım url oluşturuyor.
+                   userId=user.Id,
+                   token=code 
+                });
                 return RedirectToAction("Login", "Account");
             }
 
@@ -100,12 +117,44 @@ namespace E_Ticaret.Webui.Controllers
         public async Task<IActionResult> Logout()
         {
 
-            await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync(); //cookiyi temizler.
             return Redirect("~/");
             
         }
 
+        public async Task<IActionResult> ConfirmedEmail(string userId,string token)
+        {
+            if(userId==null||token==null)
+            {
+                CreateMessage("Geçersiz token", "danger");
+                return View();
+            }
+            var user = await _usermanager.FindByIdAsync(userId);
+            if(user!=null)
+            { 
+                var result = await _usermanager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    CreateMessage("Hesabınız onaylandı", "success");
+                    return View();
+                }
+            }
+            CreateMessage("Hesabınız onaylanmadı", "danger");
+            return View();
 
+        }
+
+        public void CreateMessage(string message, string type)
+        {
+            var msg = new AlertMessage()
+            {
+                AlertType = type,
+                Message = message
+            };
+            TempData["message"] = JsonConvert.SerializeObject(msg);
+
+
+        }
 
     }
 }
