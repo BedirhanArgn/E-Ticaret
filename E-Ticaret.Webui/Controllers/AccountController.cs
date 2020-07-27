@@ -1,4 +1,5 @@
-﻿using E_Ticaret.Webui.Identity;
+﻿using E_Ticaret.Webui.EmailServices;
+using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,13 @@ namespace E_Ticaret.Webui.Controllers
     {
         private UserManager<User> _usermanager; //kullanıcı yönetimi
         private SignInManager<User> _signInManager; //cookie yönetimi
-
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private IEmailService _emailSender;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService)
         {
 
             _usermanager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailService;
         }
 
         [HttpGet]
@@ -106,11 +108,12 @@ namespace E_Ticaret.Webui.Controllers
                    userId=user.Id,
                    token=code 
                 });
+                await _emailSender.SendEmailAsync(model.Email, "Hesabınız onaylayınız",$"Lütfen email hesabınızı onaylanmak için linke <a href='https://localhost:44317{url}'>tıklayınız</a> ");
                 return RedirectToAction("Login", "Account");
             }
 
             ModelState.AddModelError("Password","Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
-            return View();
+            return View(model);
         }
 
 

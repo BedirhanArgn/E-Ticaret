@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using E_ticaret.business.Abstract;
 using E_ticaret.business.Concreate;
 using E_ticaret.data.Abstract;
 using E_ticaret.data.Concrete.EfCore;
+using E_Ticaret.Webui.EmailServices;
 using E_Ticaret.Webui.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,12 +25,13 @@ namespace E_Ticaret.Webui
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration  _configuration;
+    
+        public Startup(IConfiguration configuration)  //bunun üzerinden appconfig.json daki verilere ulaþabiliyotsun
+        {
+            _configuration = configuration;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,17 +40,18 @@ namespace E_Ticaret.Webui
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer("Server=DESKTOP-CH0UVQ2; Database=shopDb; User Id=sa; Password=bedir123456;"));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); //kullanýcýlarý authotechticate için yazdýk tarayýcýya cokie býraktýk.Her seferinde logine atmasýn diye 
             /**************************************************************************************************/
+            services.AddSingleton<IConfiguration>(_configuration);
 
             services.Configure<IdentityOptions>(options => {
-                options.Password.RequireDigit = true; //Sayý olmalý
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = false; //Sayý olmalý
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = true; //@ * gibi karakterler olmalý
+                options.Password.RequireNonAlphanumeric = false; //@ * gibi karakterler olmalý
 
                 options.Lockout.MaxFailedAccessAttempts = 5; //5 giriþten sonra kilitlenioyr. 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMilliseconds(5); //5 dk sonra açýlýr
-                options.Lockout.AllowedForNewUsers=true; //üsttekilerle alakalý
+                options.Lockout.AllowedForNewUsers = true; //üsttekilerle alakalý
 
                 //options.User.AllowedUserNameCharacters = ""; //olmasýný istediðiniz kesin karaterrleri yaz
 
@@ -55,7 +59,7 @@ namespace E_Ticaret.Webui
 
                 options.SignIn.RequireConfirmedEmail = true; //Kayýt olduktan email ile token gönderecek 
                 options.SignIn.RequireConfirmedPhoneNumber = false; //telefon doðrulamasý
-                
+
             });
 
             services.ConfigureApplicationCookie(option => //cookie burada yaratýlýr.
@@ -69,8 +73,8 @@ namespace E_Ticaret.Webui
                 option.Cookie = new CookieBuilder
                 {
                     HttpOnly = true, //cookie'yi sadece http olarak alabiliriz.
-                    Name=".Shopapp.Security.Cookie",
-                    SameSite=SameSiteMode.Strict //B kullanýcýsý Anýn cookiesine sahip olsa bile onun adýna iþlem ypaamz bunu yazarsak 
+                    Name = ".Shopapp.Security.Cookie",
+                    SameSite = SameSiteMode.Strict //B kullanýcýsý Anýn cookiesine sahip olsa bile onun adýna iþlem ypaamz bunu yazarsak 
                 };
 
 
@@ -85,6 +89,8 @@ namespace E_Ticaret.Webui
             services.AddScoped<IProductService, ProductManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<ICategoryService, CategoryManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddControllersWithViews();
+            services.AddScoped<IEmailService, SmtpEmailSender>(i => new SmtpEmailSender(_configuration["EmailSender:Host"], _configuration.GetValue<int>("EmailSender:Port"),
+                _configuration.GetValue<bool>("EmailSender:EnableSSL"),_configuration["EmailSender:UserName"],_configuration["EmailSender:Password"])); //Burada ayarlarý appsettingten almak için constructor yaratmalýsýn.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
