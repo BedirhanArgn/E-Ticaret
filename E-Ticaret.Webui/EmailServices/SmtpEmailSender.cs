@@ -40,8 +40,6 @@ namespace E_Ticaret.Webui.EmailServices
                 }
                 
                 ); 
-
-
         }
-    }
+    }   
 }

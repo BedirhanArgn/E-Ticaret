@@ -41,7 +41,10 @@ namespace E_Ticaret.Webui
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); //kullanýcýlarý authotechticate için yazdýk tarayýcýya cokie býraktýk.Her seferinde logine atmasýn diye 
             /**************************************************************************************************/
             services.AddSingleton<IConfiguration>(_configuration);
-
+         
+            services.AddScoped<IEmailService, SmtpEmailSender>(i => new SmtpEmailSender(_configuration["EmailSender:Host"], _configuration.GetValue<int>("EmailSender:Port"),
+               _configuration.GetValue<bool>("EmailSender:EnableSSL"), _configuration["EmailSender:UserName"], _configuration["EmailSender:Password"])); //Burada ayarlarý appsettingten almak için constructor yaratmalýsýn.
+      
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireDigit = false; //Sayý olmalý
                 options.Password.RequireLowercase = false;
@@ -89,8 +92,8 @@ namespace E_Ticaret.Webui
             services.AddScoped<IProductService, ProductManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<ICategoryService, CategoryManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddControllersWithViews();
-            services.AddScoped<IEmailService, SmtpEmailSender>(i => new SmtpEmailSender(_configuration["EmailSender:Host"], _configuration.GetValue<int>("EmailSender:Port"),
-                _configuration.GetValue<bool>("EmailSender:EnableSSL"),_configuration["EmailSender:UserName"],_configuration["EmailSender:Password"])); //Burada ayarlarý appsettingten almak için constructor yaratmalýsýn.
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

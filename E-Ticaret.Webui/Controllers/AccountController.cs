@@ -27,26 +27,26 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string ReturnUrl=null) //kullanıcıyı loginden önceyi sayfaya yönlendirmemiz gerek login olduktan sonra bu yüzden return urli alıyoruz burada
+        public IActionResult Login(string ReturnUrl = null) //kullanıcıyı loginden önceyi sayfaya yönlendirmemiz gerek login olduktan sonra bu yüzden return urli alıyoruz burada
         {
             return View(new LoginModel
             {
                 ReturnUrl = ReturnUrl //bunu daha sonra input hiddenda tutarız (yanlis bir şeyler girildiğinde tekrar post metodundan geleceği için return url boş gelmesin)
-            }) ;
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             var user = await _usermanager.FindByEmailAsync(model.Email); //username var mı diye control
 
-            if(user==null)
+            if (user == null)
             {
                 ModelState.AddModelError("", "Bu email adresi ile daha önce hespa oluşturulmamış");
                 return View(model);
@@ -61,11 +61,11 @@ namespace E_Ticaret.Webui.Controllers
 
 
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true,false); //4.parametre 20 dk lık seesion süresi tanımlansın mı ,5.parametre hesap kilitlesin mi
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false); //4.parametre 20 dk lık seesion süresi tanımlansın mı ,5.parametre hesap kilitlesin mi
 
             if (result.Succeeded)
             {
-                return Redirect(model.ReturnUrl??"~/"); //null sa home pageye git dedik.
+                return Redirect(model.ReturnUrl ?? "~/"); //null sa home pageye git dedik.
             }
             ModelState.AddModelError("", "Girilen email veya şifre yanlış");
 
@@ -79,13 +79,13 @@ namespace E_Ticaret.Webui.Controllers
         public IActionResult Register()
         {
             return View();
-      }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken] //csrf ataklarının önüne geçer
-        public  async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> Register(RegisterModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -100,20 +100,21 @@ namespace E_Ticaret.Webui.Controllers
 
             var result = await _usermanager.CreateAsync(user, model.Password); //Bu kısım parola üretip şifreliyor.
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 //Eğer mail dorulama yapmak istersen bu kısımda bir token oluştur.    
                 var code = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
-                var url = Url.Action("ConfirmedEmail","Account",new {  //bu kısım url oluşturuyor.
-                   userId=user.Id,
-                   token=code 
+                var url = Url.Action("ConfirmedEmail", "Account", new
+                {  //bu kısım url oluşturuyor.
+                    userId = user.Id,
+                    token = code
                 });
-                await _emailSender.SendEmailAsync(model.Email, "Hesabınız onaylayınız",$"Lütfen email hesabınızı onaylanmak için linke <a href='https://localhost:44317{url}'>tıklayınız</a> ");
+                await _emailSender.SendEmailAsync(model.Email, "Hesabınız onaylayınız", $"Lütfen email hesabınızı onaylanmak için linke <a href='https://localhost:44317{url}'>tıklayınız</a> ");
                 return RedirectToAction("Login", "Account");
             }
 
-            ModelState.AddModelError("Password","Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
-            return View(model);
+            ModelState.AddModelError("Password", "Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
+            return View();
         }
 
 
@@ -122,19 +123,19 @@ namespace E_Ticaret.Webui.Controllers
 
             await _signInManager.SignOutAsync(); //cookiyi temizler.
             return Redirect("~/");
-            
+
         }
 
-        public async Task<IActionResult> ConfirmedEmail(string userId,string token)
+        public async Task<IActionResult> ConfirmedEmail(string userId, string token)
         {
-            if(userId==null||token==null)
+            if (userId == null || token == null)
             {
                 CreateMessage("Geçersiz token", "danger");
                 return View();
             }
             var user = await _usermanager.FindByIdAsync(userId);
-            if(user!=null)
-            { 
+            if (user != null)
+            {
                 var result = await _usermanager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
@@ -158,6 +159,75 @@ namespace E_Ticaret.Webui.Controllers
 
 
         }
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPasswordAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return View();
+            }
+            var user = await _usermanager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return View();
+            }
+            var code = await _usermanager.GeneratePasswordResetTokenAsync(user); //reset token 
+            CreateMessage("Başarılı E-mailinizden doğrulama yapınız", "success");
+            //sonra e maile tıklatacağız 
+            var url = Url.Action("ResetPassword", "Account", new
+            {  //bu kısım url oluşturuyor.
+                userId = user.Id,
+                token = code
+            });
+            await _emailSender.SendEmailAsync(email, "Reset password", $"Lütfen parolanızı yenilemek için linke <a href='https://localhost:44317{url}'>tıklayınız</a> ");
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string userId, string token) //hidden olarak saklayacağız.
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
+
+            var model = new ResetPasswordModel()
+            { Token = token };
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _usermanager.FindByEmailAsync(model.Email);
+
+            if(user==null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
+
+            var result = await _usermanager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login", "Account");
+
+            }
+
+            return View(model);
+        }
+
+
 
     }
 }
