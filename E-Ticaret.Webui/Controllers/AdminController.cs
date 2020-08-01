@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using E_ticaret.business.Abstract;
 using E_ticaret.Entity;
 using E_Ticaret.ViewModel;
+using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
 using E_Ticaret.Webui.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -26,11 +28,50 @@ namespace E_Ticaret.Webui.Controllers
         private IProductService _productService;
 
         private ICategoryService _categoryService;
-        public AdminController(IProductService productService,ICategoryService categoryService)
+        private RoleManager<IdentityRole> _roleManager; //kendi hazır ıdentityrole sınıfını kullandık kendimiz genişletmek istersek sınıfı ıdentityrole'den türeterek ek özellikler ekleyebiliriz.
+        private UserManager<User> _userManager;
+        public AdminController(IProductService productService,ICategoryService categoryService,RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _productService = productService;
+            _roleManager = roleManager;
             _categoryService = categoryService;
+            _userManager = userManager;
         }
+
+        public IActionResult RoleList()
+        {
+            return View(_roleManager.Roles);
+        }
+        public IActionResult RoleCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RoleCreateAsync(string Name)
+        {
+
+            if(ModelState.IsValid)
+            {
+                var result = await _roleManager.CreateAsync(new IdentityRole(Name));
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("RoleList");
+                }
+                else
+                {
+                    foreach (var item in result.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description); //html kısmında All dediğimiz kısımda .çıkıyor bu tip hata mesajları
+                    }
+                }
+            }
+
+            return View();
+        }
+
+
+
         public IActionResult ProductList()
         {
             return View(new ProductViewModel()
