@@ -1,4 +1,5 @@
 ﻿using E_Ticaret.Webui.EmailServices;
+using E_Ticaret.Webui.Extension;
 using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
 using Microsoft.AspNetCore.Identity;
@@ -130,8 +131,15 @@ namespace E_Ticaret.Webui.Controllers
         {
             if (userId == null || token == null)
             {
-                CreateMessage("Geçersiz token", "danger");
-                return View();
+                TempData.Put("message", new AlertMessage()
+                {
+                    AlertType = "danger",
+                    Title="Gerçersiz Token",
+                    Message="Geçersiz Token"
+
+                });
+                
+                    return View();
             }
             var user = await _usermanager.FindByIdAsync(userId);
             if (user != null)
@@ -139,26 +147,28 @@ namespace E_Ticaret.Webui.Controllers
                 var result = await _usermanager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
-                    CreateMessage("Hesabınız onaylandı", "success");
+                    TempData.Put("message", new AlertMessage()
+                    {
+                        AlertType = "success",
+                        Title = "Hesabınız Onaylandı",
+                        Message = "Hesabınız Onaylandı"
+
+                    }); 
                     return View();
                 }
             }
-            CreateMessage("Hesabınız onaylanmadı", "danger");
+            TempData.Put("message", new AlertMessage()
+            {
+                AlertType = "danger",
+                Title = "Hesabınız Onaylanmadı",
+                Message = "Hesabınız Onaylanmadı"
+
+            }); 
             return View();
 
         }
 
-        public void CreateMessage(string message, string type)
-        {
-            var msg = new AlertMessage()
-            {
-                AlertType = type,
-                Message = message
-            };
-            TempData["message"] = JsonConvert.SerializeObject(msg);
-
-
-        }
+        
         public IActionResult ForgotPassword()
         {
             return View();
@@ -177,7 +187,13 @@ namespace E_Ticaret.Webui.Controllers
                 return View();
             }
             var code = await _usermanager.GeneratePasswordResetTokenAsync(user); //reset token 
-            CreateMessage("Başarılı E-mailinizden doğrulama yapınız", "success");
+            TempData.Put("message", new AlertMessage()
+            {
+                AlertType = "success",
+                Title = "Başarılı E-mailinizden doğrulama yapınız",
+                Message = "Başarılı E-mailinizden doğrulama yapınız"
+
+            });
             //sonra e maile tıklatacağız 
             var url = Url.Action("ResetPassword", "Account", new
             {  //bu kısım url oluşturuyor.
