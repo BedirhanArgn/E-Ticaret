@@ -49,7 +49,7 @@ namespace E_Ticaret.Webui.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError("", "Bu email adresi ile daha önce hespa oluşturulmamış");
+                ModelState.AddModelError("", "Bu email adresi ile daha önce hesap oluşturulmamış");
                 return View(model);
             }
 

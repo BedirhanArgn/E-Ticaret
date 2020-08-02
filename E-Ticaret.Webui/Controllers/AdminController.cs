@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using E_ticaret.business.Abstract;
 using E_ticaret.Entity;
 using E_Ticaret.ViewModel;
+using E_Ticaret.Webui.Extension;
 using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
 using E_Ticaret.Webui.ViewModel;
@@ -30,7 +31,7 @@ namespace E_Ticaret.Webui.Controllers
         private ICategoryService _categoryService;
         private RoleManager<IdentityRole> _roleManager; //kendi hazır ıdentityrole sınıfını kullandık kendimiz genişletmek istersek sınıfı ıdentityrole'den türeterek ek özellikler ekleyebiliriz.
         private UserManager<User> _userManager;
-        public AdminController(IProductService productService,ICategoryService categoryService,RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public AdminController(IProductService productService, ICategoryService categoryService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _productService = productService;
             _roleManager = roleManager;
@@ -42,6 +43,92 @@ namespace E_Ticaret.Webui.Controllers
         {
             return View(_roleManager.Roles);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RoleEdit(string id)
+        {
+        
+          var role = await _roleManager.FindByIdAsync(id);
+
+            var members = new List<User>();
+            var nonmembers = new List<User>();
+
+
+
+            foreach (var item in _userManager.Users.ToList()) //tüm kullanıcılarda dön.
+            {
+                if (await _userManager.IsInRoleAsync(item, role.Name))
+                {
+                    members.Add(item);
+                }
+                else  //döndüğümüz kullanıcı role.Namedeki role kayıtlı mı değil mi kontrolü true false döndürüyor.
+                {
+                    nonmembers.Add(item);
+                }
+            }
+            var model = new RoleDetails()
+            {
+                Members = members,
+                NonMembers = nonmembers,
+                Role = role
+            };
+
+            return View(model);
+        }
+
+    
+
+    [HttpPost]
+    public async Task<IActionResult> RoleEdit(RoleEditModel editmodel)
+    {
+        if (ModelState.IsValid)
+        {
+            //eğer boşsa boş string tanımla boş stringte foreachönemz
+            foreach (var userId in editmodel.IdsToAdd ?? new string[] { })
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (userId != null)
+                {
+                    var result = await _userManager.AddToRoleAsync(user, editmodel.RoleName);
+
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+
+                }
+
+            } //toplu gelen user ıdleri role eklediğimiz kısım
+
+            foreach (var userId in editmodel.IdsToDelete ?? new string[] { }) //sildiğimiz kısım
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (userId != null)
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(user, editmodel.RoleName);
+
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        return Redirect("/admin/role/" + editmodel.RoleId);
+    }
+
+
+
+
         public IActionResult RoleCreate()
         {
             return View();
@@ -50,7 +137,6 @@ namespace E_Ticaret.Webui.Controllers
         [HttpPost]
         public async Task<IActionResult> RoleCreateAsync(string Name)
         {
-
             if(ModelState.IsValid)
             {
                 var result = await _roleManager.CreateAsync(new IdentityRole(Name));
@@ -62,15 +148,12 @@ namespace E_Ticaret.Webui.Controllers
                 {
                     foreach (var item in result.Errors)
                     {
-                        ModelState.AddModelError("", item.Description); //html kısmında All dediğimiz kısımda .çıkıyor bu tip hata mesajları
+                        ModelState.AddModelError("", item.Description); //html kısmında All dediğimiz kısımda çıkıyor bu tip hata mesajları
                     }
                 }
             }
-
             return View();
         }
-
-
 
         public IActionResult ProductList()
         {
@@ -106,7 +189,6 @@ namespace E_Ticaret.Webui.Controllers
                 if (_productService.Create(entity))
                 {
                     //ViewData["message"] = $"{entity.Name} isimli ürün eklendi"; //farklı bir actiona redirect olduğu için çalışmaz.
-
 
                     //var msg = new AlertMessage()
                     //{
@@ -147,12 +229,8 @@ namespace E_Ticaret.Webui.Controllers
                 SelectedCategories = product.ProductCategories.Select(i => i.Category).ToList() //seçili kategoriler edit için
             }; 
             ViewBag.Categories = _categoryService.getAll(); //hepsi 
-
-
             return View(model);  
-
         }
-
         [HttpPost]
         public async Task<IActionResult> Edit(ProductView model,int[] categoryId,IFormFile file) //resim upload için gerekli
         {
@@ -182,12 +260,7 @@ namespace E_Ticaret.Webui.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
-                
-                
                 }
-                    
-
-
                 _productService.Update(entity, categoryId);
 
                 var msg = new AlertMessage()
@@ -252,7 +325,6 @@ namespace E_Ticaret.Webui.Controllers
                     AlertType = "success",
                     Message = $"{ entity.Name } isimli kategori eklendi"
                 };
-                
                 TempData["message"] = JsonConvert.SerializeObject(msg);
                 return RedirectToAction("CategoryList");
             }
@@ -338,8 +410,6 @@ namespace E_Ticaret.Webui.Controllers
             _categoryService.DeleteFromCategory(productid, categoryId);
             return RedirectToAction("CategoryList");
         }
-
-
 
         public void CreateMessage(string message,string type)
         {

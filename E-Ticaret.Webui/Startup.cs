@@ -130,6 +130,11 @@ namespace E_Ticaret.Webui
                   pattern: "admin/role/create",
                   defaults: new { controller = "Admin", action = "RoleCreate" }
                   );
+               endpoints.MapControllerRoute(
+                 name: "admincategory",
+                 pattern: "admin/role/{id?}",
+                 defaults: new { controller = "Admin", action = "RoleEdit" }
+                 );
 
 
                endpoints.MapControllerRoute(

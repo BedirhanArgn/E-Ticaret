@@ -28,16 +28,14 @@
                             <td>@item.Id </td>
                             <td>@item.Name</td>
                             <td>
-                                <a href="/admin/role/edit/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                <form method="post" style="display:inline;" action="/admin/deleteproduct">
+                                <a href="/admin/role/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                <form method="post" style="display:inline;" action="/admin/role/delete">
                                     <input type="hidden" name="RoleId" value="@item.Id" />
                                     <button class="btn btn-danger btn-sm mr-2">Delete</button>
                                 </form>
 
                             </td>
                         </tr>
-
-
                     }
                 </tbody>
                 }

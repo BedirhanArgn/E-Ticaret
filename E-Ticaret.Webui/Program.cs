@@ -21,6 +21,7 @@ namespace E_Ticaret.Webui
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
                 });
     }
 }
