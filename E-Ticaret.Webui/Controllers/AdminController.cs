@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 
 namespace E_Ticaret.Webui.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -47,8 +47,8 @@ namespace E_Ticaret.Webui.Controllers
         [HttpGet]
         public async Task<IActionResult> RoleEdit(string id)
         {
-        
-          var role = await _roleManager.FindByIdAsync(id);
+
+            var role = await _roleManager.FindByIdAsync(id);
 
             var members = new List<User>();
             var nonmembers = new List<User>();
@@ -76,58 +76,53 @@ namespace E_Ticaret.Webui.Controllers
             return View(model);
         }
 
-    
-
-    [HttpPost]
-    public async Task<IActionResult> RoleEdit(RoleEditModel editmodel)
-    {
-        if (ModelState.IsValid)
+        [HttpPost]
+        public async Task<IActionResult> RoleEdit(RoleEditModel editmodel)
         {
-            //eğer boşsa boş string tanımla boş stringte foreachönemz
-            foreach (var userId in editmodel.IdsToAdd ?? new string[] { })
+            if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(userId);
-                if (userId != null)
+                //eğer boşsa boş string tanımla boş stringte foreachönemz
+                foreach (var userId in editmodel.IdsToAdd ?? new string[] { })
                 {
-                    var result = await _userManager.AddToRoleAsync(user, editmodel.RoleName);
-
-                    if (!result.Succeeded)
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if (userId != null)
                     {
-                        foreach (var error in result.Errors)
+                        var result = await _userManager.AddToRoleAsync(user, editmodel.RoleName);
+
+                        if (!result.Succeeded)
                         {
-                            ModelState.AddModelError("", error.Description);
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
                         }
+
                     }
 
-                }
+                } //toplu gelen user ıdleri role eklediğimiz kısım
 
-            } //toplu gelen user ıdleri role eklediğimiz kısım
-
-            foreach (var userId in editmodel.IdsToDelete ?? new string[] { }) //sildiğimiz kısım
-            {
-                var user = await _userManager.FindByIdAsync(userId);
-                if (userId != null)
+                foreach (var userId in editmodel.IdsToDelete ?? new string[] { }) //sildiğimiz kısım
                 {
-                    var result = await _userManager.RemoveFromRoleAsync(user, editmodel.RoleName);
-
-                    if (!result.Succeeded)
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if (userId != null)
                     {
-                        foreach (var error in result.Errors)
+                        var result = await _userManager.RemoveFromRoleAsync(user, editmodel.RoleName);
+
+                        if (!result.Succeeded)
                         {
-                            ModelState.AddModelError("", error.Description);
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
                         }
+
                     }
 
                 }
 
             }
-
+            return Redirect("/admin/role/" + editmodel.RoleId);
         }
-        return Redirect("/admin/role/" + editmodel.RoleId);
-    }
-
-
-
 
         public IActionResult RoleCreate()
         {
@@ -137,10 +132,10 @@ namespace E_Ticaret.Webui.Controllers
         [HttpPost]
         public async Task<IActionResult> RoleCreateAsync(string Name)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _roleManager.CreateAsync(new IdentityRole(Name));
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("RoleList");
                 }
@@ -162,7 +157,7 @@ namespace E_Ticaret.Webui.Controllers
 
                 Products = _productService.getAll()
 
-            }) ;
+            });
         }
 
         [HttpGet]
@@ -175,7 +170,7 @@ namespace E_Ticaret.Webui.Controllers
 
         public IActionResult CreateProduct(ProductView product)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var entity = new Product()
                 {
@@ -212,7 +207,7 @@ namespace E_Ticaret.Webui.Controllers
         public IActionResult Edit(int? id)
         {
             var product = _productService.GetByIdWithCategories((int)id);
-            if(product==null)
+            if (product == null)
             {
                 return NotFound();
             }
@@ -220,19 +215,19 @@ namespace E_Ticaret.Webui.Controllers
             {
                 ProductId = product.ProductId,
                 Description = product.Description,
-                IsApproved=product.IsApproved,
-                IsHome=product.IsHome,
+                IsApproved = product.IsApproved,
+                IsHome = product.IsHome,
                 ImageUrl = product.ImageUrl,
                 Url = product.Url,
                 Name = product.Name,
                 Price = product.Price,
                 SelectedCategories = product.ProductCategories.Select(i => i.Category).ToList() //seçili kategoriler edit için
-            }; 
+            };
             ViewBag.Categories = _categoryService.getAll(); //hepsi 
-            return View(model);  
+            return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(ProductView model,int[] categoryId,IFormFile file) //resim upload için gerekli
+        public async Task<IActionResult> Edit(ProductView model, int[] categoryId, IFormFile file) //resim upload için gerekli
         {
             if (ModelState.IsValid)
             {
@@ -249,14 +244,14 @@ namespace E_Ticaret.Webui.Controllers
                 entity.Description = model.Description;
                 entity.IsHome = model.IsHome;
                 entity.IsApproved = model.IsApproved;
-                if(file!=null)
+                if (file != null)
                 {
                     var extension = Path.GetExtension(file.FileName);
                     var randomName = string.Format($"{Guid.NewGuid()}{extension}");
                     entity.ImageUrl = randomName;
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", file.FileName);
-                    
-                    using(var stream=new FileStream(path,FileMode.Create))
+
+                    using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
@@ -273,13 +268,13 @@ namespace E_Ticaret.Webui.Controllers
             }
             ViewBag.Categories = _categoryService.getAll(); //validation çalışması için ekledim Ayrıca selectedCategories bilgileri yok hata dan sonra 
             return View(model);
-            }
+        }
 
         public IActionResult DeleteProduct(int productId)
         {
             var entity = _productService.getById(productId);
 
-            if(entity!=null)
+            if (entity != null)
             {
                 _productService.Delete(entity);
             }
@@ -298,7 +293,7 @@ namespace E_Ticaret.Webui.Controllers
             return View(new CategoryListModel()
             {
                 Categories = _categoryService.getAll()
-            }) ;
+            });
         }
         [HttpGet]
         public IActionResult CategoryCreate()
@@ -334,12 +329,12 @@ namespace E_Ticaret.Webui.Controllers
         [HttpGet]
         public IActionResult CategoryEdit(int? id)
         {
-            if(id==null)
+            if (id == null)
             {
                 return NotFound();
             }
             var ExistControl = _categoryService.GetByIdWithProducts((int)id);
-            if(ExistControl==null)
+            if (ExistControl == null)
             {
                 return NotFound();
             }
@@ -405,13 +400,13 @@ namespace E_Ticaret.Webui.Controllers
 
 
         [HttpPost]
-        public IActionResult DeleteFromCategory(int productid,int categoryId)
+        public IActionResult DeleteFromCategory(int productid, int categoryId)
         {
             _categoryService.DeleteFromCategory(productid, categoryId);
             return RedirectToAction("CategoryList");
         }
 
-        public void CreateMessage(string message,string type)
+        public void CreateMessage(string message, string type)
         {
             var msg = new AlertMessage()
             {

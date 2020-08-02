@@ -74,8 +74,6 @@ namespace E_Ticaret.Webui.Controllers
         }
 
 
-
-
         [HttpGet]
         public IActionResult Register()
         {
@@ -117,8 +115,6 @@ namespace E_Ticaret.Webui.Controllers
             ModelState.AddModelError("Password", "Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
             return View();
         }
-
-
         public async Task<IActionResult> Logout()
         {
 
@@ -241,6 +237,13 @@ namespace E_Ticaret.Webui.Controllers
             }
 
             return View(model);
+        }
+
+        public IActionResult AccessDenied()
+        {
+
+
+            return View();
         }
 
 
