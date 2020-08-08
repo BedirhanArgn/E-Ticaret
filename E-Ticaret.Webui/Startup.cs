@@ -26,8 +26,8 @@ namespace E_Ticaret.Webui
     public class Startup
     {
 
-        private IConfiguration  _configuration;
-    
+        private IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)  //bunun üzerinden appconfig.json daki verilere ulaþabiliyotsun
         {
             _configuration = configuration;
@@ -41,11 +41,12 @@ namespace E_Ticaret.Webui
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); //kullanýcýlarý authotechticate için yazdýk tarayýcýya cokie býraktýk.Her seferinde logine atmasýn diye 
             /**************************************************************************************************/
             services.AddSingleton<IConfiguration>(_configuration);
-         
+
             services.AddScoped<IEmailService, SmtpEmailSender>(i => new SmtpEmailSender(_configuration["EmailSender:Host"], _configuration.GetValue<int>("EmailSender:Port"),
                _configuration.GetValue<bool>("EmailSender:EnableSSL"), _configuration["EmailSender:UserName"], _configuration["EmailSender:Password"])); //Burada ayarlarý appsettingten almak için constructor yaratmalýsýn.
-      
-            services.Configure<IdentityOptions>(options => {
+
+            services.Configure<IdentityOptions>(options =>
+            {
                 options.Password.RequireDigit = false; //Sayý olmalý
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
@@ -93,7 +94,7 @@ namespace E_Ticaret.Webui
             services.AddScoped<ICategoryService, CategoryManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddControllersWithViews();
 
-           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +120,21 @@ namespace E_Ticaret.Webui
 
             app.UseEndpoints(endpoints =>
            {
+
+
+
+               endpoints.MapControllerRoute(
+                   name: "adminuseredit",
+                   pattern: "admin/user/{id?}",
+                   defaults: new { controller = "Admin", action = "UserEdit" }
+                   );
+
+               endpoints.MapControllerRoute(
+                   name: "adminuserlist",
+                   pattern: "admin/user/list",
+                   defaults: new { controller = "Admin", action = "UserList" }
+                   );
+
                endpoints.MapControllerRoute(
                    name: "admincategory",
                    pattern: "admin/role/list",
@@ -156,9 +172,9 @@ namespace E_Ticaret.Webui
                   );
 
                endpoints.MapControllerRoute(
-                   name:"admincategoryedit",
-                   pattern:"admin/categories/{id?}",
-                   defaults: new {controller="Admin",action="CategoryEdit"}             
+                   name: "admincategoryedit",
+                   pattern: "admin/categories/{id?}",
+                   defaults: new { controller = "Admin", action = "CategoryEdit" }
                    );
 
                endpoints.MapControllerRoute(

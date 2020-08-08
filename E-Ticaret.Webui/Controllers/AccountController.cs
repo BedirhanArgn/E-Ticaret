@@ -2,6 +2,7 @@
 using E_Ticaret.Webui.Extension;
 using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace E_Ticaret.Webui.Controllers
 {
     [AutoValidateAntiforgeryToken] //her postta csrf ataklarının önüne geçer 
+    [Authorize]
     public class AccountController : Controller
     {
         private UserManager<User> _usermanager; //kullanıcı yönetimi
@@ -26,7 +28,7 @@ namespace E_Ticaret.Webui.Controllers
             _signInManager = signInManager;
             _emailSender = emailService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string ReturnUrl = null) //kullanıcıyı loginden önceyi sayfaya yönlendirmemiz gerek login olduktan sonra bu yüzden return urli alıyoruz burada
         {
@@ -35,7 +37,7 @@ namespace E_Ticaret.Webui.Controllers
                 ReturnUrl = ReturnUrl //bunu daha sonra input hiddenda tutarız (yanlis bir şeyler girildiğinde tekrar post metodundan geleceği için return url boş gelmesin)
             });
         }
-
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
@@ -73,12 +75,14 @@ namespace E_Ticaret.Webui.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
 
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+        [AllowAnonymous]
 
         [HttpPost]
         [ValidateAntiForgeryToken] //csrf ataklarının önüne geçer
@@ -164,12 +168,13 @@ namespace E_Ticaret.Webui.Controllers
 
         }
 
-        
+        [AllowAnonymous]
+
         public IActionResult ForgotPassword()
         {
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> ForgotPasswordAsync(string email)
         {

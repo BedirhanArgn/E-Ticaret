@@ -39,6 +39,10 @@ namespace E_Ticaret.Webui.Controllers
             _userManager = userManager;
         }
 
+        public IActionResult UserList()
+        {
+            return View(_userManager.Users);
+        }
         public IActionResult RoleList()
         {
             return View(_roleManager.Roles);
@@ -415,8 +419,8 @@ namespace E_Ticaret.Webui.Controllers
             };
             TempData["message"] = JsonConvert.SerializeObject(msg);
 
-
         }
+
 
     }
 }
