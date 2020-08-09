@@ -39,6 +39,59 @@ namespace E_Ticaret.Webui.Controllers
             _userManager = userManager;
         }
 
+        public async Task<IActionResult> UserEdit(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if(user!=null)
+            {
+                var selectedRoles = await _userManager.GetRolesAsync(user); //kullanıcının seçtiği rol bilgileri alınır.
+                var allRoles = _roleManager.Roles.Select(i => i.Name); //tüm rollerin isimleri getir.
+
+                ViewBag.Roles = allRoles;
+
+                return View(new UserDetailModel()
+                {
+                    UserId = user.Id,
+                    UserName=user.UserName,
+                    FirstName=user.FirstName,
+                    LastName=user.LastName,
+                    Email=user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    SelectedRoles=selectedRoles
+
+                }) ; 
+         
+            }
+            return Redirect("/admin/user/list");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserEdit(UserDetailModel model,string[] selectedRoles)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if(user!=null)
+                {
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.UserName = model.UserName;
+                    user.Email = model.Email;
+                    user.EmailConfirmed = model.EmailConfirmed;
+                    var result = await _userManager.UpdateAsync(user);
+
+                    if(result.Succeeded)
+                    {
+                        var userRoles = await _userManager.GetRolesAsync(user);
+                        selectedRoles = selectedRoles ?? new string[] { }; //eğer selectedroles boşsa sayfa nullreferance hatası almaması için boş string yolluyoruz null ise
+                        await _userManager.AddToRolesAsync(user,selectedRoles.Except(userRoles).ToArray<string>());
+                    }
+                }
+            }
+            return View(model);
+        }
+
+
         public IActionResult UserList()
         {
             return View(_userManager.Users);
