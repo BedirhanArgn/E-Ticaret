@@ -14,8 +14,19 @@
         <div class="mb-3">
             <h4 class="text-primary mb-3"><i class="fas fa-lira-sign"></i> @Model.product.Price</h4>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg">Add to Card</button>
-    </div>
+        <form asp-controller="Cart" asp-action="AddToCard" method="post">
+            <input type="hidden" name="productId" value="@Model.product.ProductId" />
+            <div class="input-group mb-3">
+                <input type="number"  class="form-control" name="quantity" value="1" min="1" step="1" />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                 <i class="fas fa-cart-plus"></i> Add to Cart </button>
+                    
+                 </div>
+            
+            </div>
+        </form>
+</div>
 </div>
 <div class="row">
     <div class="col-md-12">
