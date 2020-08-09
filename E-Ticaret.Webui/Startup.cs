@@ -87,7 +87,9 @@ namespace E_Ticaret.Webui
 
 
             services.AddControllersWithViews();
-            //Businness katmaný ui katmanda tanýtmak için doldur
+            //Businness katmaný ui katmanda tanýtmak için doldur.(Dependency injection iþlemlerini tanýtýr)
+            services.AddScoped<ICardRepository, EfCoreCartRepository>();
+            services.AddScoped<ICardService, CardManager>();
             services.AddScoped<IProductRepository, EfCoreProductRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.
             services.AddScoped<IProductService, ProductManager>(); //Ürün katmanýnda IproductRepository çaprýldýpýnda efcoreproduct'ýn çaýþmasýný saðlamak icin yazdýl.

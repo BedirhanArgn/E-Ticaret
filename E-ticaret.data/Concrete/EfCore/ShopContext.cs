@@ -13,6 +13,12 @@ namespace E_ticaret.data.Concrete.EfCore
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<CardItem> CardItems { get; set; }
+
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=DESKTOP-CH0UVQ2; Database=shopDb; User Id=sa; Password=bedir123456;");

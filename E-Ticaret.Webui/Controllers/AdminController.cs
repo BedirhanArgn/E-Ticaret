@@ -85,13 +85,15 @@ namespace E_Ticaret.Webui.Controllers
                         var userRoles = await _userManager.GetRolesAsync(user);
                         selectedRoles = selectedRoles ?? new string[] { }; //eğer selectedroles boşsa sayfa nullreferance hatası almaması için boş string yolluyoruz null ise
                         await _userManager.AddToRolesAsync(user,selectedRoles.Except(userRoles).ToArray<string>());
+             
+                        await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles).ToArray<string>());
+                        return Redirect("/admin/user/list");
                     }
                 }
+                return View(model);
             }
             return View(model);
         }
-
-
         public IActionResult UserList()
         {
             return View(_userManager.Users);
@@ -224,7 +226,6 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpPost]
-
         public IActionResult CreateProduct(ProductView product)
         {
             if (ModelState.IsValid)
@@ -293,7 +294,6 @@ namespace E_Ticaret.Webui.Controllers
                 {
                     return NotFound();
                 }
-
                 entity.ProductId = model.ProductId;
                 entity.Name = model.Name;
                 entity.Price = model.Price;
@@ -326,7 +326,6 @@ namespace E_Ticaret.Webui.Controllers
             ViewBag.Categories = _categoryService.getAll(); //validation çalışması için ekledim Ayrıca selectedCategories bilgileri yok hata dan sonra 
             return View(model);
         }
-
         public IActionResult DeleteProduct(int productId)
         {
             var entity = _productService.getById(productId);
@@ -408,7 +407,6 @@ namespace E_Ticaret.Webui.Controllers
         }
 
         [HttpPost]
-
         public IActionResult CategoryEdit(CategoryModel cat)
         {
             var entity = _categoryService.GetByIdWithProducts(cat.CategoryId);
@@ -435,7 +433,6 @@ namespace E_Ticaret.Webui.Controllers
             cat.Products = entity.ProductCategories.Select(p => p.Product).ToList();
             return View(cat);
         }
-
         public IActionResult CategoryDelete(int? categoryid)
         {
             var entity = _categoryService.getById((int)categoryid);
@@ -455,14 +452,12 @@ namespace E_Ticaret.Webui.Controllers
             return RedirectToAction("CategoryList");
         }
 
-
         [HttpPost]
         public IActionResult DeleteFromCategory(int productid, int categoryId)
         {
             _categoryService.DeleteFromCategory(productid, categoryId);
             return RedirectToAction("CategoryList");
         }
-
         public void CreateMessage(string message, string type)
         {
             var msg = new AlertMessage()
@@ -473,7 +468,5 @@ namespace E_Ticaret.Webui.Controllers
             TempData["message"] = JsonConvert.SerializeObject(msg);
 
         }
-
-
     }
 }

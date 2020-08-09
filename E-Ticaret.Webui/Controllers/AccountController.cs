@@ -1,4 +1,5 @@
-﻿using E_Ticaret.Webui.EmailServices;
+﻿using E_ticaret.business.Abstract;
+using E_Ticaret.Webui.EmailServices;
 using E_Ticaret.Webui.Extension;
 using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
@@ -21,12 +22,14 @@ namespace E_Ticaret.Webui.Controllers
         private UserManager<User> _usermanager; //kullanıcı yönetimi
         private SignInManager<User> _signInManager; //cookie yönetimi
         private IEmailService _emailSender;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService)
+        private ICardService _cardService;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService, ICardService cardService)
         {
 
             _usermanager = userManager;
             _signInManager = signInManager;
             _emailSender = emailService;
+            _cardService = cardService;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -147,6 +150,8 @@ namespace E_Ticaret.Webui.Controllers
                 var result = await _usermanager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
+
+                    _cardService.InitializeCart(user.Id);
                     TempData.Put("message", new AlertMessage()
                     {
                         AlertType = "success",
