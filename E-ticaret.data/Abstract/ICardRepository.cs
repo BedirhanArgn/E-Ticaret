@@ -7,6 +7,8 @@ namespace E_ticaret.data.Abstract
 {
     public interface ICardRepository:IRepository<Card>
     {
+
+        Card GetByUserId(string userId);
     }
 
 }

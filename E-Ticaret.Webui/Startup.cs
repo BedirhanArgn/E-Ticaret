@@ -124,6 +124,11 @@ namespace E_Ticaret.Webui
            {
 
 
+               endpoints.MapControllerRoute(
+                   name: "cart",
+                   pattern: "cart",
+                   defaults: new { controller = "Cart", action = "Index" }
+                   );
 
                endpoints.MapControllerRoute(
                    name: "adminuseredit",

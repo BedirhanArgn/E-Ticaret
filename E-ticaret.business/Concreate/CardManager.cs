@@ -14,6 +14,12 @@ namespace E_ticaret.business.Concreate
         {
             _cardRepository = cardRepository;
         }
+
+        public Card GetCardByUserId(string userId)
+        {
+            return _cardRepository.GetByUserId(userId);
+                }
+
         public void InitializeCart(string userId) //kullanıcı hesabını onayladığı anda bir cart initialize edilsin.
         {
             _cardRepository.Create(new Card()
