@@ -15,10 +15,35 @@ namespace E_ticaret.business.Concreate
             _cardRepository = cardRepository;
         }
 
+        public void AddToCart(string userId, int productId, int quantity)
+        {
+            var card = GetCardByUserId(userId);
+
+            if (card != null)
+            {
+                //eklenmek isteyen ürün sepette var mı?
+                var index = card.CardItems.FindIndex(i => i.ProductId == productId); //bu metod arar ve indexini döner geriye
+                if (index < 0)
+                {
+                    card.CardItems.Add(new CardItem()
+                    {
+                        CardId = card.Id,
+                        ProductId=productId,
+                        Quantity=quantity
+                    });
+    
+                }
+
+
+
+            }
+
+        }
+
         public Card GetCardByUserId(string userId)
         {
             return _cardRepository.GetByUserId(userId);
-                }
+        }
 
         public void InitializeCart(string userId) //kullanıcı hesabını onayladığı anda bir cart initialize edilsin.
         {

@@ -10,5 +10,7 @@ namespace E_ticaret.business.Abstract
         void InitializeCart(string userId);
 
         Card GetCardByUserId(string userId);
+
+        void AddToCart(string userId, int productId, int quantity);
     }
 }
