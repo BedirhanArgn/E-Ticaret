@@ -9,6 +9,7 @@ namespace E_ticaret.data.Abstract
     {
 
         Card GetByUserId(string userId);
+        void DeleteFromCard(int carId,int productId);
     }
 
 }

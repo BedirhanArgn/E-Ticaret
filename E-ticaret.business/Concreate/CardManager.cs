@@ -33,9 +33,23 @@ namespace E_ticaret.business.Concreate
                     });
     
                 }
+                else
+                {
+                    card.CardItems[index].Quantity += quantity;
+                }
+                _cardRepository.Update(card);
 
 
+            }
 
+        }
+
+        public void DeleteFromCart(string userId, int productId)
+        {
+            var card = GetCardByUserId(userId);
+            if(card!=null)
+            {
+                _cardRepository.DeleteFromCard(card.Id,productId);
             }
 
         }

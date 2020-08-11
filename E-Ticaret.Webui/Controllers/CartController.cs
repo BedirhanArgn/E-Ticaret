@@ -1,5 +1,4 @@
 ﻿using E_ticaret.business.Abstract;
-using E_ticaret.Entity;
 using E_Ticaret.Webui.Identity;
 using E_Ticaret.Webui.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -48,5 +47,18 @@ namespace E_Ticaret.Webui.Controllers
             _cardService.AddToCart(_userManager.GetUserId(User), productId, quantity);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public IActionResult DeleteFromCart(int productId)
+        {
+            var userId = _userManager.GetUserId(User);
+            _cardService.DeleteFromCart(userId,productId);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
     }
 }

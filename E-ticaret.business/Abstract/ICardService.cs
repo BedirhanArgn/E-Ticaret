@@ -12,5 +12,6 @@ namespace E_ticaret.business.Abstract
         Card GetCardByUserId(string userId);
 
         void AddToCart(string userId, int productId, int quantity);
+        void DeleteFromCart(string userId, int productId);
     }
 }
