@@ -122,6 +122,7 @@ namespace E_Ticaret.Webui.Controllers
             ModelState.AddModelError("Password", "Bilinmeyen bir hata oldu");//Burdan hata ekleyebilirsin(Başka bir hata olduysa böyle gönderebilirsin)
             return View();
         }
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
 
@@ -130,6 +131,7 @@ namespace E_Ticaret.Webui.Controllers
 
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmedEmail(string userId, string token)
         {
             if (userId == null || token == null)
@@ -141,7 +143,8 @@ namespace E_Ticaret.Webui.Controllers
                     Message="Geçersiz Token"
 
                 });
-                
+                User user3 = await _usermanager.FindByIdAsync(userId);
+              await _usermanager.AddToRoleAsync(user3, "Customer"); //emaili onaylayanlara customer rolüne ekle
                     return View();
             }
             var user = await _usermanager.FindByIdAsync(userId);

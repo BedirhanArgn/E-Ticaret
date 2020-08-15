@@ -15,6 +15,6 @@ namespace E_Ticaret.Webui.Identity
 
             
         }
-
+        
     }
 }
